@@ -1,808 +1,1020 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation QGIS — Niveau débutant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=Source+Serif+4:ital,wght@0,300;1,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#0B5C35;--g2:#137A46;--g3:#1D9E5C;--g4:#2EC575;--g5:#E3F9EE;
+  --b1:#0D3B7A;--b2:#1A56DB;--b3:#E8F0FE;
+  --a1:#8A4A00;--a2:#E07B00;--a3:#FFF3E0;
+  --pk1:#7B1D42;--pk2:#C2335E;--pk3:#FDE8EF;
+  --n0:#F6F7F2;--n1:#E8EAE3;--n2:#C8CCC0;--n3:#8A9082;--n4:#4A5040;--n5:#1A1F18;
+  --radius:10px;--radius-lg:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-height:1.6;min-height:100vh}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* HERO */
+.hero{
+  position:relative;background:var(--g1);color:#fff;
+  padding:3rem 2.5rem 2.5rem;overflow:hidden;
+}
+.hero::before,.hero::after{
+  content:'';position:absolute;top:0;bottom:0;
+  background:rgba(255,255,255,0.07);
+  transform:skewX(-12deg);
+}
+.hero::before{width:80px;right:180px}
+.hero::after{width:140px;right:60px}
+.hero-slash{
+  position:absolute;top:0;bottom:0;right:320px;width:40px;
+  background:rgba(255,255,255,0.05);transform:skewX(-12deg);
+}
+.hero-inner{position:relative;z-index:1;max-width:860px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(255,255,255,0.12);color:rgba(255,255,255,.9);
+  border:1px solid rgba(255,255,255,.2);
+  padding:5px 14px;border-radius:20px;margin-bottom:1.25rem;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--g4)}
+.hero h1{font-size:clamp(26px,4vw,38px);font-weight:700;line-height:1.15;margin-bottom:.5rem;letter-spacing:-.02em}
+.hero h1 span{color:var(--g4)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.65);font-family:'Source Serif 4',serif;font-style:italic;margin-bottom:1.75rem}
+.meta-chips{display:flex;flex-wrap:wrap;gap:10px}
+.meta-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:500;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  padding:6px 14px;border-radius:20px;color:rgba(255,255,255,.9);
+}
+.meta-chip svg{opacity:.7}
 
-  .wrap {
-    font-family: 'Sora', sans-serif;
-    padding: 0 0 2rem;
-    color: var(--color-text-primary);
-  }
+/* LAYOUT */
+.app{max-width:900px;margin:0 auto;padding:1.75rem 1.25rem 3rem}
 
-  .hero {
-    background: var(--color-background-secondary);
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    padding: 2rem 1.5rem 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+/* NAV TABS */
+.tabs-wrap{
+  display:flex;align-items:center;gap:0;
+  background:#fff;border:1px solid var(--n1);
+  border-radius:var(--radius-lg);padding:5px;
+  margin-bottom:1.75rem;position:relative;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.tab-btn{
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;
+  padding:9px 18px;border-radius:8px;border:none;
+  background:transparent;color:var(--n3);cursor:pointer;
+  transition:color .2s;white-space:nowrap;flex:1;
+}
+.tab-btn:hover{color:var(--n4)}
+.tab-btn.active{background:var(--g1);color:#fff;box-shadow:0 2px 8px rgba(11,92,53,.25)}
 
-  .hero-badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: #E1F5EE;
-    color: #0F6E56;
-    padding: 3px 10px;
-    border-radius: 4px;
-    margin-bottom: 0.75rem;
-  }
+/* PANELS */
+.panel{display:none}.panel.active{display:block}
 
-  .hero h1 {
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 0.4rem;
-  }
+/* OBJECTIVES GRID */
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:1.5rem}
+.obj-card{
+  background:#fff;border-radius:var(--radius-lg);
+  padding:1.25rem;border:1px solid var(--n1);
+  border-top:3px solid var(--g3);
+  transition:transform .18s,box-shadow .18s;
+}
+.obj-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.obj-num{
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--g2);margin-bottom:.6rem;
+}
+.obj-card p{font-size:13px;color:var(--n4);line-height:1.6}
 
-  .hero-sub {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    font-family: 'Source Serif 4', serif;
-    font-style: italic;
-    margin-bottom: 1rem;
-  }
+/* TIP BOX */
+.tip-box{
+  background:var(--g5);border-left:3px solid var(--g3);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:1rem 1.25rem;margin:1.25rem 0;
+}
+.tip-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g2);margin-bottom:4px}
+.tip-box p,.tip-box div{font-size:13px;color:var(--g1);line-height:1.55}
 
-  .meta-row {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
+.ask-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;
+  padding:9px 18px;border-radius:8px;
+  border:1px solid var(--n1);background:#fff;color:var(--n4);
+  cursor:pointer;transition:all .15s;margin-top:1rem;
+  text-decoration:none;
+}
+.ask-btn:hover{background:var(--g5);border-color:var(--g3);color:var(--g1)}
 
-  .meta-item {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+/* MODULE ACCORDION CARDS */
+.module-card{
+  background:#fff;border:1px solid var(--n1);border-radius:var(--radius-lg);
+  margin-bottom:.75rem;overflow:hidden;transition:box-shadow .2s;
+}
+.module-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.module-header{
+  display:flex;align-items:center;gap:14px;
+  padding:1.1rem 1.4rem;cursor:pointer;user-select:none;
+  transition:background .15s;
+}
+.module-header:hover{background:var(--n0)}
+.module-num-wrap{
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;position:relative;overflow:hidden;
+}
+.module-num-wrap::after{
+  content:'';position:absolute;right:-8px;top:0;bottom:0;width:14px;
+  background:rgba(255,255,255,.25);transform:skewX(-12deg);
+}
+.module-title-group{flex:1;min-width:0}
+.module-title{font-size:14px;font-weight:600;line-height:1.3;color:var(--n5)}
+.module-subtitle{font-size:12px;color:var(--n3);margin-top:2px}
+.module-dur{font-size:11px;font-weight:500;color:var(--n3);white-space:nowrap;padding:4px 10px;background:var(--n0);border-radius:20px}
+.module-chevron{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.module-chevron svg{transition:transform .25s;color:var(--n3)}
+.module-card.open .module-chevron svg{transform:rotate(180deg)}
+.module-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.module-card.open .module-body{max-height:3000px}
+.module-body-inner{padding:.25rem 1.4rem 1.4rem;border-top:1px solid var(--n1)}
 
-  .meta-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #1D9E75;
-    flex-shrink: 0;
-  }
+/* MODULE COLOR SCHEMES */
+.m1{background:#E3F9EE;color:#0B5C35}
+.m2{background:#E8F0FE;color:#0D3B7A}
+.m3{background:#FFF3E0;color:#8A4A00}
+.m4{background:#EAF3DE;color:#2E5C00}
+.m5{background:#FDE8EF;color:#7B1D42}
 
-  .tabs {
-    display: flex;
-    gap: 4px;
-    padding: 0 1.5rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-  }
+/* NOTION CARDS INSIDE MODULES */
+.notion-section{margin-bottom:1.5rem}
+.notion-title{
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--n3);margin:1rem 0 .5rem;
+}
+.notion-card{
+  background:#fff;border:1px solid var(--n1);border-radius:var(--radius);
+  margin-bottom:.5rem;overflow:hidden;transition:box-shadow .15s;
+}
+.notion-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.notion-header{
+  padding:.75rem 1rem;cursor:pointer;user-select:none;
+  border-left:3px solid var(--g3);
+  transition:background .15s;
+}
+.notion-header:hover{background:var(--n0)}
+.notion-label{
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--g2);margin-bottom:2px;
+}
+.notion-title-text{
+  font-size:13px;font-weight:600;color:var(--n5);line-height:1.3;
+}
+.notion-preview{
+  font-size:12px;color:var(--n3);margin-top:2px;line-height:1.4;
+}
+.notion-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s ease-out;
+}
+.notion-card.open .notion-body{max-height:800px}
+.notion-body-inner{
+  padding:0 1rem .75rem;border-top:1px solid var(--n0);
+}
+.notion-body p{
+  font-size:12px;color:var(--n4);line-height:1.55;margin:.5rem 0;
+}
+.notion-body .eg{
+  background:var(--g5);border-left:2px solid var(--g3);
+  padding:.5rem .75rem;margin:.5rem 0;border-radius:0 4px 4px 0;
+  font-size:11px;color:var(--g1);line-height:1.4;
+}
+.notion-body code{
+  background:var(--n1);padding:1px 4px;border-radius:3px;
+  font-family:'Courier New',monospace;font-size:11px;color:var(--a2);
+}
 
-  .tab {
-    font-family: 'Sora', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 6px;
-    border: 0.5px solid var(--color-border-secondary);
-    background: transparent;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
+/* EXERCISES */
+.ex-card{background:#fff;border:1px solid var(--n1);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:.75rem}
+.ex-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem}
+.ex-title{font-size:14px;font-weight:600;color:var(--n5);line-height:1.3}
+.ex-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.tag-guidé{background:var(--g5);color:var(--g1)}
+.tag-pratique{background:var(--b3);color:var(--b1)}
+.tag-projet{background:var(--a3);color:var(--a1)}
+.ex-mod{font-size:12px;color:var(--n3);margin-bottom:.5rem}
+.ex-desc{font-size:13px;color:var(--n4);line-height:1.55;margin-bottom:.75rem}
+.step-list{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:6px}
+.step-list li{
+  counter-increment:step;font-size:12px;color:var(--n4);
+  padding:7px 10px 7px 36px;position:relative;
+  background:var(--n0);border-radius:7px;line-height:1.5;
+}
+.step-list li::before{
+  content:counter(step);position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;border-radius:50%;
+  background:var(--n2);color:var(--n4);
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
 
-  .tab:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+/* RESOURCES */
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
+.res-card{background:#fff;border:1px solid var(--n1);border-radius:var(--radius-lg);padding:1.1rem}
+.res-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:.6rem;flex-shrink:0}
+.res-name{font-size:13px;font-weight:600;margin-bottom:3px;color:var(--n5)}
+.res-desc{font-size:12px;color:var(--n3);line-height:1.4}
 
-  .tab.active {
-    background: #0F6E56;
-    color: #E1F5EE;
-    border-color: #0F6E56;
-  }
+.epsg-list li,.tole-list li{
+  font-size:13px;color:var(--n4);padding:7px 0 7px 18px;position:relative;
+  border-bottom:1px solid var(--n0);line-height:1.5;
+}
+.epsg-list li:last-child,.tole-list li:last-child{border-bottom:none}
+.epsg-list li::before,.tole-list li::before{
+  content:'';position:absolute;left:0;top:14px;
+  width:5px;height:5px;border-radius:50%;background:var(--b2);
+}
+.epsg-list strong{color:var(--b1);font-weight:600}
+.tole-list strong{color:var(--g2);font-weight:600}
+.info-block{background:#fff;border:1px solid var(--n1);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-top:1rem}
 
-  .content {
-    padding: 0 1.5rem;
-  }
+/* PROGRESS BAR */
+.prog-row{display:flex;align-items:center;gap:10px;margin-top:.25rem}
+.prog-bar{flex:1;height:3px;background:var(--n1);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px}
+.prog-label{font-size:11px;color:var(--n3);white-space:nowrap}
 
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  /* Objectifs */
-  .obj-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-
-  .obj-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 1rem;
-    border-left: 3px solid #1D9E75;
-  }
-
-  .obj-icon {
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-
-  .obj-card p {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  /* Module cards */
-  .module-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-
-  .module-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    transition: background 0.15s;
-    user-select: none;
-  }
-
-  .module-header:hover { background: var(--color-background-secondary); }
-
-  .module-num {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .module-title-group { flex: 1; }
-
-  .module-title {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.3;
-  }
-
-  .module-subtitle {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    margin-top: 2px;
-  }
-
-  .module-dur {
-    font-size: 11px;
-    color: var(--color-text-tertiary);
-    white-space: nowrap;
-  }
-
-  .chevron {
-    font-size: 11px;
-    color: var(--color-text-tertiary);
-    transition: transform 0.2s;
-  }
-
-  .module-card.open .chevron { transform: rotate(180deg); }
-
-  .module-body {
-    display: none;
-    padding: 0 1.25rem 1.25rem;
-    border-top: 0.5px solid var(--color-border-tertiary);
-  }
-
-  .module-card.open .module-body { display: block; }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--color-text-tertiary);
-    margin: 1rem 0 0.5rem;
-  }
-
-  .point-list { list-style: none; }
-
-  .point-list li {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    padding: 5px 0;
-    padding-left: 16px;
-    position: relative;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-  }
-
-  .point-list li:last-child { border-bottom: none; }
-
-  .point-list li::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 13px;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-  }
-
-  .tip-box {
-    background: #E1F5EE;
-    border-left: 3px solid #1D9E75;
-    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
-    padding: 0.75rem 1rem;
-    margin-top: 1rem;
-  }
-
-  .tip-box p {
-    font-size: 12px;
-    color: #085041;
-    line-height: 1.5;
-  }
-
-  .tip-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #0F6E56;
-    margin-bottom: 3px;
-  }
-
-  /* Exercices */
-  .ex-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .ex-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .ex-title { font-size: 14px; font-weight: 500; }
-
-  .ex-tag {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-
-  .tag-pratique { background: #E6F1FB; color: #185FA5; }
-  .tag-projet { background: #FAEEDA; color: #854F0B; }
-  .tag-guidé { background: #EAF3DE; color: #3B6D11; }
-
-  .ex-mod {
-    font-size: 12px;
-    color: var(--color-text-tertiary);
-    margin-bottom: 0.4rem;
-  }
-
-  .ex-desc {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  .step-list { counter-reset: step; list-style: none; margin-top: 0.6rem; }
-
-  .step-list li {
-    counter-increment: step;
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    padding: 4px 0 4px 24px;
-    position: relative;
-  }
-
-  .step-list li::before {
-    content: counter(step);
-    position: absolute;
-    left: 0; top: 4px;
-    width: 16px; height: 16px;
-    background: var(--color-background-secondary);
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: 50%;
-    font-size: 10px;
-    font-weight: 500;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--color-text-secondary);
-    line-height: 16px;
-    text-align: center;
-  }
-
-  /* Ressources */
-  .res-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 10px;
-  }
-
-  .res-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 1rem;
-  }
-
-  .res-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    margin-bottom: 0.5rem;
-  }
-
-  .res-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
-  .res-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; }
-
-  .ask-btn {
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-md);
-    border: 0.5px solid var(--color-border-secondary);
-    background: transparent;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    margin-top: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s;
-  }
-
-  .ask-btn:hover { background: var(--color-background-secondary); }
-
-  .progress-bar {
-    height: 3px;
-    background: var(--color-background-secondary);
-    border-radius: 2px;
-    margin-top: 4px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: #1D9E75;
-  }
-
-  .dur-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: #0F6E56;
-    background: #E1F5EE;
-    padding: 4px 10px;
-    border-radius: 4px;
-    margin-top: 1rem;
-  }
+/* Responsive */
+@media (max-width:768px){
+  .hero{padding:2rem 1.5rem 1.5rem}
+  .hero h1{font-size:28px}
+  .app{padding:1rem 1rem 2rem}
+  .tabs-wrap{flex-wrap:wrap;padding:3px}
+  .tab-btn{flex:1 1 auto;min-width:100px}
+  .obj-grid{grid-template-columns:1fr}
+  .res-grid{grid-template-columns:1fr}
+}
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Formation QGIS niveau débutant — programme complet interactif</h2>
-
-  <div class="hero">
-    <div class="hero-badge">Formation SIG</div>
-    <h1>QGIS — Niveau débutant</h1>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-slash"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Formation SIG
+    </div>
+    <h1>QGIS — <span>Niveau débutant</span></h1>
     <p class="hero-sub">De la prise en main à la création d'atlas cartographiques</p>
-    <div class="meta-row">
-      <div class="meta-item"><div class="meta-dot"></div>2 à 3 jours de formation</div>
-      <div class="meta-item"><div class="meta-dot"></div>5 modules progressifs</div>
-      <div class="meta-item"><div class="meta-dot"></div>Ateliers pratiques sur données réelles</div>
+    <div class="meta-chips">
+      <div class="meta-chip">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        2 à 3 jours
+      </div>
+      <div class="meta-chip">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        5 modules progressifs
+      </div>
+      <div class="meta-chip">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Ateliers sur données réelles
+      </div>
     </div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('objectifs')">Objectifs</button>
-    <button class="tab" onclick="switchTab('modules')">Modules</button>
-    <button class="tab" onclick="switchTab('exercices')">Exercices pratiques</button>
-    <button class="tab" onclick="switchTab('ressources')">Ressources</button>
-  </div>
-
-  <div class="content">
-
-    <!-- OBJECTIFS -->
-    <div class="panel active" id="panel-objectifs">
-      <div class="obj-grid">
-        <div class="obj-card">
-          
-          <p>Naviguer dans l'interface QGIS et explorer les panneaux, barres d'outils et couches de données</p>
-        </div>
-        <div class="obj-card">
-          
-          <p>Distinguer et manipuler les données vecteur (géométries) et raster (pixels) selon les cas d'usage</p>
-        </div>
-        <div class="obj-card">
-         
-          <p>Importer des données depuis diverses sources : Shapefiles, GeoPackages, CSV, services web WMS/WFS</p>
-        </div>
-        <div class="obj-card">
-          
-          <p>Effectuer des requêtes attributaires, jointures, calculs de champs et géotraitements de base</p>
-        </div>
-        <div class="obj-card">
-        
-          <p>Produire des cartes thématiques soignées avec symbologie graduée, étiquettes et mise en page TOLE</p>
-        </div>
-        <div class="obj-card">
-          <div class="obj-icon">&#x2203;</div>
-          <p>Automatiser la production de séries de cartes via la fonction Atlas du composeur d'impression</p>
-        </div>
-      </div>
-      <div class="tip-box">
-        <div class="tip-label">Méthode pédagogique</div>
-        <p>Les ateliers s'appuient sur des données réelles liées aux missions des agents : suivi de travaux, parcellaires agricoles, réseaux d'eau. Le matin : projet guidé pas à pas. L'après-midi : application sur les données propres des participants.</p>
-      </div>
-      <button class="ask-btn" onclick="sendPrompt('Quels prérequis faut-il avoir avant cette formation QGIS débutant ?')">Quels prérequis sont nécessaires ? ↗</button>
-    </div>
-
-    <!-- MODULES -->
-    <div class="panel" id="panel-modules">
-
-      <!-- M1 -->
-      <div class="module-card" id="m1">
-        <div class="module-header" onclick="toggleModule('m1')">
-          <div class="module-num" style="background:#E1F5EE;color:#0F6E56;">1</div>
-          <div class="module-title-group">
-            <div class="module-title">Introduction aux SIG et prise en main de QGIS</div>
-            <div class="module-subtitle">Concepts fondamentaux · Interface · Installation</div>
-          </div>
-          <div class="module-dur">~ 1h</div>
-          <div class="chevron">&#9660;</div>
-        </div>
-        <div class="module-body">
-          <div class="section-label">Concepts de base</div>
-          <ul class="point-list" style="--dot-color:#1D9E75">
-            <li style="--dot-c:#1D9E75">Définition d'un SIG et cas d'usage concrets dans les missions des agents</li>
-            <li>Mode vecteur : points, lignes et polygones comme objets géométriques avec attributs</li>
-            <li>Mode raster : grille de pixels avec valeur par cellule (MNT, orthophotos, satellites)</li>
-            <li>Comparaison des deux modes et quand privilégier l'un ou l'autre</li>
-          </ul>
-          <div class="section-label">Interface utilisateur</div>
-          <ul class="point-list">
-            <li>Panneau Couches : gestion de l'ordre d'affichage et de la visibilité</li>
-            <li>Panneau Explorateur : navigation dans les fichiers et connexions aux sources</li>
-            <li>Barre d'outils : navigation (zoom, déplacement), sélection et édition</li>
-            <li>Barre de statut : coordonnées, échelle, SCR et indicateurs de progression</li>
-            <li>Fenêtre principale et gestion des projets (.qgz)</li>
-          </ul>
-          <div class="section-label">Installation</div>
-          <ul class="point-list">
-            <li>Différence entre version LTR (Long Term Release) et dernière version stable</li>
-          </ul>
-          <div class="tip-box">
-            <div class="tip-label">Conseil formateur</div>
-            <p>Commencer par une démonstration live en projetant QGIS. Demander aux participants d'identifier leurs données métier habituelles pour contextualiser chaque notion.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- M2 -->
-      <div class="module-card" id="m2">
-        <div class="module-header" onclick="toggleModule('m2')">
-          <div class="module-num" style="background:#E6F1FB;color:#185FA5;">2</div>
-          <div class="module-title-group">
-            <div class="module-title">Gestion des données et projections</div>
-            <div class="module-subtitle">Import de couches · Formats · Systèmes de coordonnées</div>
-          </div>
-          <div class="module-dur">~ 2h</div>
-          <div class="chevron">&#9660;</div>
-        </div>
-        <div class="module-body">
-          <div class="section-label">Ajout de couches</div>
-          <ul class="point-list">
-            <li>Importer un Shapefile (.shp) : glisser-déposer ou menu Couche &gt; Ajouter</li>
-            <li>GeoPackage (.gpkg) : format ouvert multi-couches recommandé pour le partage</li>
-            <li>Couches raster : GeoTIFF, JPEG2000, ECW</li>
-            <li>Services web : WMS (affichage) et WFS (données téléchargeables)</li>
-          </ul>
-          <div class="section-label">Données externes (CSV/TXT)</div>
-          <ul class="point-list">
-            <li>Import de fichiers texte délimités avec colonnes X/Y pour la géolocalisation</li>
-            <li>Gestion des séparateurs (virgule, point-virgule, tabulation)</li>
-            <li>Encodage : UTF-8 par défaut, LATIN-1 pour les fichiers anciens avec caractères accentués</li>
-            <li>Vérification de la géométrie après import (points bien placés ?)</li>
-          </ul>
-          <div class="section-label">Systèmes de coordonnées (SCR / CRS)</div>
-          <ul class="point-list">
-            <li>Notion de projection cartographique et code EPSG</li>
-            <li>Lambert 93 (EPSG:2154) : projection officielle pour la France métropolitaine</li>
-            <li>UTM Zone 31N (EPSG:3949) : projection utilisée pour la Manche</li>
-            <li>WGS84 / GPS (EPSG:4326) et Web Mercator (EPSG:3857)</li>
-            <li>Reprojection à la volée : QGIS aligne automatiquement les couches dans le SCR du projet</li>
-            <li>Reprojection permanente : exporter une couche dans un autre CRS</li>
-          </ul>
-          <div class="tip-box">
-            <div class="tip-label">Vigilance décalages</div>
-            <p>Toujours vérifier que le SCR du projet et des couches sont cohérents. Un décalage visible sur la carte est souvent dû à une confusion entre EPSG:4326 et EPSG:2154.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- M3 -->
-      <div class="module-card" id="m3">
-        <div class="module-header" onclick="toggleModule('m3')">
-          <div class="module-num" style="background:#FAEEDA;color:#854F0B;">3</div>
-          <div class="module-title-group">
-            <div class="module-title">Manipulation et analyse de données</div>
-            <div class="module-subtitle">Attributs · Calculs · Jointures · Géotraitements</div>
-          </div>
-          <div class="module-dur">~ 2h</div>
-          <div class="chevron">&#9660;</div>
-        </div>
-        <div class="module-body">
-          <div class="section-label">Table d'attributs</div>
-          <ul class="point-list">
-            <li>Ouvrir la table (F6) et comprendre la relation objet géographique ↔ ligne attributaire</li>
-            <li>Sélection par formulaire : filtrer selon des critères attributaires</li>
-            <li>Tri, recherche et affichage des entités sélectionnées uniquement</li>
-            <li>Édition : modifier, ajouter ou supprimer des attributs (mode édition)</li>
-          </ul>
-          <div class="section-label">Calculateur de champs</div>
-          <ul class="point-list">
-            <li>Créer un nouveau champ calculé (ex : surface en hectares depuis la géométrie)</li>
-            <li>Expressions courantes : $area, $length, "champ1" + "champ2", if(condition,...)</li>
-            <li>Mettre à jour un champ existant sur une sélection</li>
-          </ul>
-          <div class="section-label">Jointures attributaires</div>
-          <ul class="point-list">
-            <li>Principe : relier une couche géo à un tableau (Excel/CSV) via un identifiant commun</li>
-            <li>Configuration de la jointure dans les propriétés de la couche</li>
-            <li>Vérification des champs joints et gestion des NULL (données non appariées)</li>
-          </ul>
-          <div class="section-label">Géotraitements</div>
-          <ul class="point-list">
-            <li>Zone tampon (buffer) : créer une zone de X mètres autour d'objets</li>
-            <li>Découpage (clip) : extraire la partie d'une couche dans une emprise</li>
-            <li>Intersection, union et différence entre couches</li>
-            <li>Boîte à outils de traitement : accéder à tous les algorithmes QGIS/GDAL/GRASS</li>
-          </ul>
-          <div class="tip-box">
-            <div class="tip-label">Application métier</div>
-            <p>Exercice type : créer une zone tampon de 50 m autour d'un réseau d'eau, puis croiser avec les parcelles agricoles pour identifier les zones de servitude.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- M4 -->
-      <div class="module-card" id="m4">
-        <div class="module-header" onclick="toggleModule('m4')">
-          <div class="module-num" style="background:#EAF3DE;color:#3B6D11;">4</div>
-          <div class="module-title-group">
-            <div class="module-title">Symbologie et analyse visuelle</div>
-            <div class="module-subtitle">Représentation · Étiquetage · Plugins</div>
-          </div>
-          <div class="module-dur">~ 2h</div>
-          <div class="chevron">&#9660;</div>
-        </div>
-        <div class="module-body">
-          <div class="section-label">Représentation cartographique</div>
-          <ul class="point-list">
-            <li>Symbole simple : couleur de remplissage, contour, épaisseur et opacité</li>
-            <li>Carte catégorisée : une couleur par catégorie (type d'occupation du sol...)</li>
-            <li>Carte graduée : dégradé de couleurs selon une valeur numérique (population, surface...)</li>
-            <li>Visibilité par échelle : afficher/masquer des couches selon le niveau de zoom</li>
-            <li>Bibliothèques de couleurs et rampes ColorBrewer pour les cartographes</li>
-          </ul>
-          <div class="section-label">Étiquetage</div>
-          <ul class="point-list">
-            <li>Activer les étiquettes depuis un champ attributaire</li>
-            <li>Mise en forme : police, taille, couleur, halo/masque pour la lisibilité</li>
-            <li>Placement automatique et ajustement manuel des étiquettes</li>
-            <li>Étiquettes basées sur des expressions (concaténer plusieurs champs)</li>
-          </ul>
-          <div class="section-label">Plugins indispensables</div>
-          <ul class="point-list">
-            <li>QuickMapServices : fonds de carte Google, Bing, OpenStreetMap en un clic</li>
-            <li>MMQGIS : manipulation avancée, géocodage, conversion de formats</li>
-            <li>DataPlotly : graphiques statistiques liés à la carte</li>
-            <li>Gestionnaire d'extensions : installation, mise à jour et activation</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- M5 -->
-      <div class="module-card" id="m5">
-        <div class="module-header" onclick="toggleModule('m5')">
-          <div class="module-num" style="background:#FBEAF0;color:#993556;">5</div>
-          <div class="module-title-group">
-            <div class="module-title">Mise en page et création d'atlas</div>
-            <div class="module-subtitle">Composeur · Règles TOLE · Atlas · Export</div>
-          </div>
-          <div class="module-dur">~ 2h</div>
-          <div class="chevron">&#9660;</div>
-        </div>
-        <div class="module-body">
-          <div class="section-label">Composeur d'impression</div>
-          <ul class="point-list">
-            <li>Créer une nouvelle mise en page (Projet &gt; Nouvelle mise en page)</li>
-            <li>Ajouter et paramétrer l'élément Carte (emprise, échelle, grille de coordonnées)</li>
-            <li>Règles cartographiques TOLE : Titre, Orientation (flèche Nord), Légende, Échelle, Source/auteur</li>
-            <li>Positionnement et alignement des éléments sur la planche</li>
-            <li>Cadre, marges et design professionnel de la fiche cartographique</li>
-          </ul>
-          <div class="section-label">Création d'atlas (point fort)</div>
-          <ul class="point-list">
-            <li>Principe : générer automatiquement N cartes à partir d'une couche de couverture</li>
-            <li>Configurer la couche d'atlas (ex : communes, parcelles, secteurs de travaux)</li>
-            <li>Adapter les titres et textes avec des variables d'atlas (@atlas_feature, @atlas_pagename)</li>
-            <li>Prévisualisation et navigation entre les pages de l'atlas</li>
-            <li>Export en lot : PDF multi-pages ou fichiers image individuels</li>
-          </ul>
-          <div class="section-label">Export et intégration</div>
-          <ul class="point-list">
-            <li>Export PDF : haute résolution pour rapports administratifs</li>
-            <li>Export image (PNG/JPEG) : insertion dans Word, PowerPoint, e-mail</li>
-            <li>Export SVG : format vectoriel pour édition graphique</li>
-            <li>Sauvegarde du projet et partage (.qgz + données liées)</li>
-          </ul>
-          <div class="tip-box">
-            <div class="tip-label">Réponse directe aux besoins identifiés</div>
-            <p>Ce module répond à la demande forte de création d'atlas pour des séries de cartes par secteur ou parcelle. La pratique sur les données propres des participants en après-midi est particulièrement recommandée ici.</p>
-          </div>
-        </div>
-      </div>
-
-       <a href="https://notebooklm.google.com/notebook/bec135f1-ad71-480d-95cf-ede7012a7cfe/artifact/68f3882c-8294-4115-b71d-f2c17b4d9d46?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_" class="ask-btn" target="_blank">Quiz ↗</a>
-    </div>
-
-    <!-- EXERCICES -->
-    <div class="panel" id="panel-exercices">
-
-      <div class="ex-card">
-        <div class="ex-header">
-          <div class="ex-title">Prise en main et exploration d'un jeu de données communal</div>
-          <div class="ex-tag tag-guidé">Guidé</div>
-        </div>
-        <div class="ex-mod">Module 1 — Durée : 1h30</div>
-        <div class="ex-desc">Ouvrir un projet QGIS fourni contenant les limites communales d'un département, un réseau routier et une couche de points (mairies). Explorer l'interface et identifier chaque panneau.</div>
-        <ol class="step-list">
-          <li>Ouvrir le projet .qgz fourni par le formateur</li>
-          <li>Identifier les types de couches (vecteur/raster) dans le panneau Couches</li>
-          <li>Utiliser le zoom et la navigation pour explorer le territoire</li>
-          <li>Ouvrir la table d'attributs de la couche communes et identifier les champs</li>
-          <li>Changer l'ordre des couches pour modifier l'affichage</li>
-        </ol>
-      </div>
-
-      <div class="ex-card">
-        <div class="ex-header">
-          <div class="ex-title">Import d'un fichier CSV de points de suivi de travaux</div>
-          <div class="ex-tag tag-pratique">Pratique</div>
-        </div>
-        <div class="ex-mod">Module 2 — Durée : 1h</div>
-        <div class="ex-desc">Importer un fichier texte contenant des coordonnées GPS de chantiers, vérifier l'encodage et le SCR, puis reprojeter en 3949.</div>
-        <ol class="step-list">
-          <li>Ouvrir le CSV dans un éditeur texte pour identifier le séparateur et l'encodage</li>
-          <li>Importer via Couche &gt; Ajouter une couche de texte délimité</li>
-          <li>Vérifier que les points s'affichent au bon endroit sur la carte</li>
-          <li>Exporter la couche en GeoPackage dans le SCR EPSG:3949</li>
-        </ol>
-      </div>
-
-      <div class="ex-card">
-        <div class="ex-header">
-          <div class="ex-title">Jointure et calcul : superficie des parcelles par propriétaire</div>
-          <div class="ex-tag tag-pratique">Pratique</div>
-        </div>
-        <div class="ex-mod">Module 3 — Durée : 2h</div>
-        <div class="ex-desc">Joindre un tableau Excel de propriétaires à une couche parcellaire, calculer la superficie en hectares et sélectionner les parcelles supérieures à 5 ha.</div>
-        <ol class="step-list">
-          <li>Configurer la jointure dans Propriétés &gt; Jointures</li>
-          <li>Vérifier les champs joints dans la table d'attributs</li>
-          <li>Ouvrir le calculateur de champs, créer le champ "superficie_ha" avec $area / 10000</li>
-          <li>Filtrer par expression pour sélectionner les parcelles &gt; 5 ha</li>
-          <li>Exporter la sélection en nouvelle couche</li>
-        </ol>
-      </div>
-
-      <div class="ex-card">
-        <div class="ex-header">
-          <div class="ex-title">Carte thématique de l'occupation du sol</div>
-          <div class="ex-tag tag-pratique">Pratique</div>
-        </div>
-        <div class="ex-mod">Module 4 — Durée : 1h30</div>
-        <div class="ex-desc">Créer une carte catégorisée d'une couche d'occupation du sol avec des étiquettes de communes, sur fond OpenStreetMap.</div>
-        <ol class="step-list">
-          <li>Installer QuickMapServices et ajouter un fond OSM</li>
-          <li>Paramétrer la symbologie catégorisée sur le champ "Type_OCS"</li>
-          <li>Appliquer une rampe de couleurs et ajuster l'opacité des polygones</li>
-          <li>Activer les étiquettes communes avec halo blanc pour la lisibilité</li>
-        </ol>
-      </div>
-
-      <div class="ex-card">
-        <div class="ex-header">
-          <div class="ex-title">Projet final : Atlas par commune du suivi de travaux</div>
-          <div class="ex-tag tag-projet">Projet</div>
-        </div>
-        <div class="ex-mod">Module 5 — Durée : 1h (après-midi Jour 3)</div>
-        <div class="ex-desc">Produire un atlas de N fiches cartographiques (une par commune) affichant les travaux en cours, les réseaux d'eau et les parcelles concernées, avec titre dynamique et légende.</div>
-        <ol class="step-list">
-          <li>Créer une mise en page avec tous les éléments TOLE</li>
-          <li>Configurer l'atlas sur la couche communes</li>
-          <li>Paramétrer le titre dynamique avec la variable @atlas_pagename</li>
-          <li>Prévisualiser les fiches et corriger les débordements d'étiquettes</li>
-          <li>Exporter l'atlas en PDF multi-pages</li>
-        </ol>
-      </div>
-
-      <button class="ask-btn" onclick="sendPrompt('Peux-tu rédiger des consignes détaillées pour le projet final Atlas QGIS, avec des captures d\'écran commentées des étapes clés ?')">Rédiger les consignes complètes du projet final ↗</button>
-    </div>
-
-    <!-- RESSOURCES -->
-    <div class="panel" id="panel-ressources">
-      <div class="res-grid">
-        <div class="res-card">
-          <div class="res-icon" style="background:#E1F5EE;color:#0F6E56;font-size:16px;">&#x1F4DA;</div>
-          <div class="res-name">Documentation QGIS officielle</div>
-          <div class="res-desc">Manuel utilisateur complet en français sur docs.qgis.org — référence pour chaque outil</div>
-        </div>
-        <div class="res-card">
-          <div class="res-icon" style="background:#E6F1FB;color:#185FA5;font-size:16px;">&#x1F30D;</div>
-          <div class="res-name">QuickMapServices</div>
-          <div class="res-desc">Plugin QGIS pour accéder à des dizaines de fonds de carte (Google, Bing, OSM, IGN)</div>
-        </div>
-        <div class="res-card">
-          <div class="res-icon" style="background:#FAEEDA;color:#854F0B;font-size:16px;">&#x26A1;</div>
-          <div class="res-name">MMQGIS</div>
-          <div class="res-desc">Plugin multifonction : géocodage, conversion de formats, manipulation avancée</div>
-        </div>
-        <div class="res-card">
-          <div class="res-icon" style="background:#EAF3DE;color:#3B6D11;font-size:16px;">&#x1F5FA;</div>
-          <div class="res-name">Géoportail IGN</div>
-          <div class="res-desc">Fonds de carte et données IGN officielles (BDTOPO, BDPARCELLAIRE) via WMS/WFS</div>
-        </div>
-        <div class="res-card">
-          <div class="res-icon" style="background:#FBEAF0;color:#993556;font-size:16px;">&#x1F4C1;</div>
-          <div class="res-name">OpenDataSoft / Data.gouv.fr</div>
-          <div class="res-desc">Sources de données ouvertes françaises : limites admin., équipements, réseaux</div>
-        </div>
-        <div class="res-card">
-          <div class="res-icon" style="background:#EEEDFE;color:#534AB7;font-size:16px;">&#x1F3AF;</div>
-          <div class="res-name">ColorBrewer 2.0</div>
-          <div class="res-desc">Outil en ligne pour choisir des palettes cartographiques adaptées (colorblind-safe)</div>
-        </div>
-      </div>
-
-      <div style="margin-top:1.5rem;">
-        <div class="section-label">Codes EPSG à retenir</div>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>EPSG:2154</strong> — Lambert 93, projection officielle France métropolitaine</li>
-          <li><strong>EPSG:4326</strong> — WGS84 géographique (coordonnées GPS en degrés)</li>
-          <li><strong>EPSG:3949</strong> — UTM Zone 31N, projection utilisée pour la Manche</li>
-          <li><strong>EPSG:3857</strong> — Web Mercator (Google Maps, OSM, tuiles web)</li>
-          <li><strong>EPSG:4171</strong> — RGF93 géographique (variante française de WGS84)</li>
-        </ul>
-      </div>
-
-      <div style="margin-top:1.5rem;">
-        <div class="section-label">Règles cartographiques TOLE</div>
-        <ul class="point-list" style="margin-top:0.5rem">
-          <li><strong>T</strong>itre — descriptif, précis, daté si nécessaire</li>
-          <li><strong>O</strong>rientation — flèche Nord ou indication de l'axe</li>
-          <li><strong>L</strong>égende — tous les symboles expliqués, unités précisées</li>
-          <li><strong>É</strong>chelle — barre graphique et/ou rapport numérique</li>
-          <li><strong>S</strong>ource — auteur, organisme, date des données, projection</li>
-        </ul>
-      </div>
-
-      <a href="https://notebooklm.google.com/notebook/bec135f1-ad71-480d-95cf-ede7012a7cfe/artifact/68f3882c-8294-4115-b71d-f2c17b4d9d46?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_" class="ask-btn" target="_blank">https://notebooklm.google.com/notebook/bec135f1-ad71-480d-95cf-ede7012a7cfe/artifact/68f3882c-8294-4115-b71d-f2c17b4d9d46?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_ ↗</a>
-    </div>
-
   </div>
 </div>
 
+<!-- APP -->
+<div class="app">
+
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <button class="tab-btn active" onclick="switchTab('objectifs',this)">Objectifs</button>
+    <button class="tab-btn" onclick="switchTab('modules',this)">Modules</button>
+    <button class="tab-btn" onclick="switchTab('exercices',this)">Exercices</button>
+    <button class="tab-btn" onclick="switchTab('ressources',this)">Ressources</button>
+  </div>
+
+  <!-- ===== OBJECTIFS ===== -->
+  <div class="panel active" id="panel-objectifs">
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-num">01 — Interface</div>
+        <p>Naviguer dans l'interface QGIS et explorer les panneaux, barres d'outils et couches de données</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">02 — Données</div>
+        <p>Distinguer et manipuler les données vecteur (géométries) et raster (pixels) selon les cas d'usage</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">03 — Import</div>
+        <p>Importer des données depuis diverses sources : Shapefiles, GeoPackages, CSV, services web WMS/WFS</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">04 — Analyse</div>
+        <p>Effectuer des requêtes attributaires, jointures, calculs de champs et géotraitements de base</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">05 — Symbologie</div>
+        <p>Produire des cartes thématiques soignées avec symbologie graduée, étiquettes et mise en page TOLE</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">06 — Atlas</div>
+        <p>Automatiser la production de séries de cartes via la fonction Atlas du composeur d'impression</p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-label">Méthode pédagogique</div>
+      <p>Les ateliers s'appuient sur des données réelles liées aux missions des agents : suivi de travaux, parcellaires agricoles, réseaux d'eau. Le matin : projet guidé pas à pas. L'après-midi : application sur les données propres des participants.</p>
+    </div>
+
+    <button class="ask-btn" onclick="sendPrompt && sendPrompt('Quels prérequis faut-il avoir avant cette formation QGIS débutant ?')">Quels prérequis sont nécessaires ? ↗</button>
+  </div>
+
+  <!-- ===== MODULES ===== -->
+  <div class="panel" id="panel-modules">
+
+    <!-- MODULE 1 -->
+    <div class="module-card" id="module1">
+      <div class="module-header" onclick="toggleModule('module1')">
+        <div class="module-num-wrap m1">1</div>
+        <div class="module-title-group">
+          <div class="module-title">Introduction aux SIG et prise en main de QGIS</div>
+          <div class="module-subtitle">Fondements théoriques, découverte de l'interface et installation du logiciel</div>
+        </div>
+        <div class="module-dur">3 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Concepts de base</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Définition</div>
+                <div class="notion-title-text">Qu'est-ce qu'un SIG ?</div>
+                <div class="notion-preview">Système d'Information Géographique — outil de collecte, stockage et analyse de données spatiales.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Un SIG est un système informatique permettant de <strong>collecter, stocker, manipuler, analyser et restituer</strong> des données référencées géographiquement. Contrairement à un simple plan ou une carte papier, le SIG lie chaque objet spatial à une base de données attributaire interrogeable.</p>
+                  <div class="eg"><strong>Cas d'usage agents :</strong> cartographier les travaux de voirie en cours et consulter l'état d'avancement par clic sur l'objet ; gérer les réseaux d'eau avec les caractéristiques de chaque canalisation ; suivre les dossiers de permis de construire par parcelle.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Vecteur</div>
+                <div class="notion-title-text">Mode vecteur : points, lignes, polygones</div>
+                <div class="notion-preview">Des objets géométriques discrets, chacun associé à une fiche d'attributs.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Point :</strong> coordonnées X,Y. Ex : mairie, borne incendie, captage d'eau. Chaque point possède des attributs (nom, code INSEE, date de contrôle...).</p>
+                  <p><strong>Ligne (polyligne) :</strong> succession de sommets. Ex : route, cours d'eau, canalisation. Attributs : longueur, nature revêtement, débit...</p>
+                  <p><strong>Polygone :</strong> surface fermée. Ex : parcelle cadastrale, zone inondable, bâtiment. Attributs : surface, propriétaire, destination...</p>
+                  <div class="eg"><strong>Point clé :</strong> on peut interroger, filtrer et modifier chaque objet individuellement. C'est la force du vecteur pour la gestion métier.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Raster</div>
+                <div class="notion-title-text">Mode raster : grille de pixels</div>
+                <div class="notion-preview">Une image géoréférencée dont chaque cellule porte une valeur numérique.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Un raster est une <strong>grille régulière de cellules</strong> (pixels), chacune stockant une valeur. La résolution spatiale détermine le niveau de détail.</p>
+                  <p><strong>Orthophoto :</strong> photographie aérienne redressée géométriquement. Résolution typique IGN : 20 cm.</p>
+                  <p><strong>MNT :</strong> chaque pixel = altitude en mètres. Utilisé pour calculer pentes, bassins versants, zones inondables.</p>
+                  <div class="eg"><strong>Limite :</strong> on ne peut pas cliquer sur "un objet" dans un raster — on lit la valeur d'une cellule. Pour des analyses objet par objet, le vecteur est préférable.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Interface utilisateur</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Panneau</div>
+                <div class="notion-title-text">Panneau Couches</div>
+                <div class="notion-preview">Liste et ordre d'affichage de toutes les couches du projet.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Le panneau Couches liste toutes les couches chargées. <strong>L'ordre dans le panneau détermine l'ordre d'affichage</strong> : la couche du haut s'affiche au-dessus des autres.</p>
+                  <p>Cocher/décocher pour afficher/masquer ; glisser-déposer pour changer l'ordre ; clic droit pour accéder aux propriétés, zoom sur la couche, export.</p>
+                  <div class="eg"><strong>Règle d'or :</strong> les polygones doivent être placés SOUS les lignes et les points, sinon ils les masquent.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Panneau</div>
+                <div class="notion-title-text">Panneau Explorateur</div>
+                <div class="notion-preview">Navigateur de fichiers et connexions aux sources de données.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Naviguer dans les dossiers et prévisualiser les fichiers géographiques sans les ouvrir. Gère aussi les connexions aux bases de données et services web.</p>
+                  <p><strong>Glisser-déposer :</strong> un fichier depuis l'Explorateur vers la carte ou le panneau Couches pour l'ajouter instantanément.</p>
+                  <div class="eg"><strong>Astuce :</strong> ajouter les dossiers de données du service dans les "Favoris" de l'Explorateur pour un accès rapide à chaque session.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Installation</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Version</div>
+                <div class="notion-title-text">LTR vs version courante</div>
+                <div class="notion-preview">La LTR garantit stabilité et support long terme pour les environnements professionnels.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Version LTR (Long Term Release) :</strong> maintenue et corrigée pendant 1 an minimum. Recommandée pour les postes en production, les formations et les environnements où la stabilité prime.</p>
+                  <p><strong>Version courante :</strong> nouvelles fonctionnalités toutes les 4 mois mais plus susceptible de contenir des régressions. Pour les utilisateurs avancés.</p>
+                  <div class="eg"><strong>Recommandation formation :</strong> utiliser la même version LTR sur tous les postes pour garantir une expérience identique entre participants et formateur.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2 -->
+    <div class="module-card" id="module2">
+      <div class="module-header" onclick="toggleModule('module2')">
+        <div class="module-num-wrap m2">2</div>
+        <div class="module-title-group">
+          <div class="module-title">Gestion des données et projections</div>
+          <div class="module-subtitle">Import de couches, formats géographiques et systèmes de coordonnées</div>
+        </div>
+        <div class="module-dur">4 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Ajout de couches</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Format</div>
+                <div class="notion-title-text">Shapefile (.shp)</div>
+                <div class="notion-preview">Format historique, très répandu dans les services publics.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Le Shapefile est un ensemble de <strong>plusieurs fichiers obligatoires</strong> : <code>.shp</code> (géométrie), <code>.dbf</code> (attributs), <code>.shx</code> (index), <code>.prj</code> (projection). Sans le <code>.prj</code>, QGIS ne connaît pas le SCR.</p>
+                  <p><strong>Import :</strong> glisser-déposer le fichier <code>.shp</code> dans QGIS, ou <code>Couche &gt; Ajouter une couche vecteur</code>.</p>
+                  <p><strong>Limites :</strong> nom de champ limité à 10 caractères, taille max 2 Go, un seul type de géométrie par fichier.</p>
+                  <div class="eg"><strong>Conseil :</strong> lors du partage, toujours compresser le dossier entier en .zip — si un fichier manque, la couche ne s'ouvre pas.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Format</div>
+                <div class="notion-title-text">GeoPackage (.gpkg)</div>
+                <div class="notion-preview">Format moderne recommandé : un fichier unique qui contient tout.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Base de données SQLite géospatiale. Un seul fichier <code>.gpkg</code> peut contenir <strong>plusieurs couches vecteur et raster</strong>, de la symbologie et des métadonnées.</p>
+                  <p><strong>Avantages :</strong> un seul fichier à partager, pas de limite de nom de champ, pas de limite de 2 Go, compatible avec tous les SIG modernes.</p>
+                  <div class="eg"><strong>Créer un GeoPackage :</strong> clic droit sur une couche &gt; Exporter &gt; Enregistrer les entités sous... &gt; choisir le format GeoPackage.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Systèmes de coordonnées</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">France</div>
+                <div class="notion-title-text">Lambert 93 — EPSG:2154</div>
+                <div class="notion-preview">Projection officielle pour la France métropolitaine depuis 2009.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Le Lambert 93 est la projection de référence légale pour les données géographiques en France métropolitaine. Unité : <strong>mètres</strong>.</p>
+                  <p>Coordonnées typiques : X ≈ 800 000 m, Y ≈ 6 500 000 m pour un point en France centrale.</p>
+                  <p><strong>Utilisation :</strong> toutes les données IGN (BD TOPO, BD ORTHO, cadastre), données de l'État et des collectivités.</p>
+                  <div class="eg"><strong>Vérification :</strong> si vos coordonnées X sont entre 100 000 et 1 300 000 et Y entre 6 000 000 et 7 200 000, vous êtes en Lambert 93.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">WGS84</div>
+                <div class="notion-title-text">WGS84 (EPSG:4326) et Web Mercator (EPSG:3857)</div>
+                <div class="notion-preview">Les deux projections mondiales les plus courantes — GPS et cartographie web.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>WGS84 (EPSG:4326) :</strong> système de référence mondial utilisé par les GPS. Coordonnées en degrés décimaux (latitude/longitude). Ex : Longitude = -1.09, Latitude = 49.11 pour Saint-Lô.</p>
+                  <p><strong>Web Mercator (EPSG:3857) :</strong> projection utilisée par Google Maps, OpenStreetMap, Bing Maps pour les tuiles raster web. Coordonnées en mètres mais déformations importantes aux hautes latitudes.</p>
+                  <div class="eg"><strong>Attention :</strong> ne pas calculer de surfaces ou distances en EPSG:4326 (degrés) ou EPSG:3857 — les résultats seraient erronés. Toujours reprojeter en Lambert 93 pour les calculs métriques.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 3 -->
+    <div class="module-card" id="module3">
+      <div class="module-header" onclick="toggleModule('module3')">
+        <div class="module-num-wrap m3">3</div>
+        <div class="module-title-group">
+          <div class="module-title">Manipulation et analyse de données</div>
+          <div class="module-subtitle">Table d'attributs, calculs, jointures et géotraitements</div>
+        </div>
+        <div class="module-dur">5 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Table d'attributs</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Base</div>
+                <div class="notion-title-text">Ouvrir la table (F6) — objet ↔ ligne</div>
+                <div class="notion-preview">Chaque ligne de la table correspond à un objet géographique sur la carte.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Raccourci <code>F6</code> ou clic droit sur la couche &gt; Ouvrir la table d'attributs. Chaque <strong>ligne = un objet géographique</strong>, chaque colonne = un attribut.</p>
+                  <p>Cliquer sur une ligne dans la table sélectionne l'objet correspondant sur la carte (surbrillance jaune). Le bouton en bas à gauche bascule entre "toutes les entités" et "entités sélectionnées uniquement".</p>
+                  <div class="eg"><strong>Astuce :</strong> <code>Ctrl + clic</code> pour sélectionner plusieurs lignes ; <code>Shift + clic</code> pour une plage continue.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Filtrage</div>
+                <div class="notion-title-text">Sélection par formulaire et par expression</div>
+                <div class="notion-preview">Sélectionner les entités répondant à des critères attributaires.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Sélection par formulaire :</strong> clic sur l'icône formulaire. Interface intuitive avec menus déroulants. Exemple : sélectionner toutes les parcelles d'un propriétaire donné.</p>
+                  <p><strong>Sélection par expression :</strong> puissante, permet des requêtes complexes :</p>
+                  <p><code>"SURFACE" > 5000</code> — parcelles de plus de 5 000 m²</p>
+                  <p><code>"COMMUNE" = 'Saint-Lô' AND "ETAT" = 'En cours'</code></p>
+                  <div class="eg"><strong>Après sélection :</strong> exporter uniquement les entités sélectionnées en nouvelle couche, ou leur appliquer une symbologie différente.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Calculateur de champs</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Calcul</div>
+                <div class="notion-title-text">Créer un champ calculé</div>
+                <div class="notion-preview">Générer automatiquement des valeurs depuis la géométrie ou d'autres champs.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Mode édition activé &gt; icône calculatrice dans la barre de la table, ou <code>Ctrl+I</code>.</p>
+                  <p><strong>Créer un nouveau champ :</strong> cocher "Créer un nouveau champ", nommer le champ, choisir le type et saisir l'expression.</p>
+                  <p><strong>Mettre à jour un champ existant :</strong> décocher "Créer un nouveau champ" et sélectionner le champ cible dans la liste.</p>
+                  <div class="eg"><strong>Expression surface :</strong> <code>$area / 10000</code> pour obtenir la surface en hectares (en Lambert 93, $area retourne des m²).</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Géotraitements</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Outil</div>
+                <div class="notion-title-text">Zone tampon (buffer)</div>
+                <div class="notion-preview">Créer une zone à X mètres autour d'objets (routes, points, polygones).</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Accès : <code>Vecteur &gt; Outils de géotraitement &gt; Zones tampons</code>, ou rechercher "Buffer" dans la boîte à outils de traitement.</p>
+                  <p><strong>Paramètres clés :</strong> couche source, distance en mètres, nombre de segments (arrondi des coins), option "Dissoudre le résultat" pour fusionner les zones qui se chevauchent.</p>
+                  <p>La distance peut être fixe ou variable (lire la distance dans un champ attributaire).</p>
+                  <div class="eg"><strong>Cas d'usage :</strong> zone de 35 m autour d'un cours d'eau (servitude), zone de 500 m autour d'un captage (périmètre de protection), zone de 50 m autour d'une voie ferrée.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 4 -->
+    <div class="module-card" id="module4">
+      <div class="module-header" onclick="toggleModule('module4')">
+        <div class="module-num-wrap m4">4</div>
+        <div class="module-title-group">
+          <div class="module-title">Symbologie et analyse visuelle</div>
+          <div class="module-subtitle">Représentation cartographique, étiquetage et plugins essentiels</div>
+        </div>
+        <div class="module-dur">4 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Représentation cartographique</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Symbologie</div>
+                <div class="notion-title-text">Carte catégorisée</div>
+                <div class="notion-preview">Une couleur différente par valeur de catégorie — type d'OCS, statut...</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Choisir "Catégorisé" dans le menu déroulant, puis sélectionner le <strong>champ de classification</strong> et cliquer sur "Classer".</p>
+                  <p>QGIS attribue automatiquement une couleur différente à chaque valeur unique du champ choisi.</p>
+                  <p><strong>Personnalisation :</strong> double-cliquer sur un symbole pour le modifier, modifier les libellés de la légende, supprimer des catégories de l'affichage.</p>
+                  <div class="eg"><strong>Conseils couleur :</strong> utiliser des rampes ColorBrewer "qualitatives" pour les catégories — conçues pour être lisibles et différenciables, y compris pour les daltoniens.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Symbologie</div>
+                <div class="notion-title-text">Carte graduée</div>
+                <div class="notion-preview">Un dégradé de couleurs selon une valeur numérique — population, surface, indice...</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Choisir "Gradué", sélectionner le <strong>champ numérique</strong> et définir le nombre de classes.</p>
+                  <p><strong>Méthodes de discrétisation :</strong><br>
+                  — <em>Intervalles égaux</em> : classes de même amplitude.<br>
+                  — <em>Quantiles</em> : même nombre d'objets par classe (pour distributions asymétriques).<br>
+                  — <em>Jenks (ruptures naturelles)</em> : minimise la variance interne — souvent la meilleure pour la carto thématique.<br>
+                  — <em>Écart-type</em> : classes définies autour de la moyenne.</p>
+                  <div class="eg"><strong>Règle :</strong> 5 classes est le maximum recommandé pour une carte lisible. Au-delà, l'œil ne distingue plus les nuances.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Étiquetage</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Étiquettes</div>
+                <div class="notion-title-text">Activer et mettre en forme les étiquettes</div>
+                <div class="notion-preview">Afficher le nom ou la valeur d'un champ directement sur la carte.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Propriétés &gt; onglet Étiquettes &gt; "Étiquettes simples" &gt; sélectionner le champ source.</p>
+                  <p><strong>Mise en forme :</strong> police, taille, gras/italique, couleur du texte.</p>
+                  <p><strong>Halo (masque) :</strong> contour coloré (généralement blanc) derrière le texte pour le rendre lisible sur tous les fonds. Épaisseur recommandée : 1 à 1.5 mm.</p>
+                  <div class="eg"><strong>Visibilité par échelle :</strong> configurer les étiquettes pour n'apparaître qu'à partir d'une certaine échelle afin d'éviter la surcharge à vue d'ensemble.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Plugins indispensables</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Plugin</div>
+                <div class="notion-title-text">QuickMapServices</div>
+                <div class="notion-preview">Accéder à des dizaines de fonds de carte en quelques clics.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Installation : <code>Extensions &gt; Gérer et installer des extensions &gt; rechercher "QuickMapServices" &gt; Installer</code>.</p>
+                  <p>Une fois installé : <code>Web &gt; QuickMapServices &gt; choisir le fond</code>. OSM standard, HOT OSM, Google Maps (satellite, hybride, routes), Bing Aerial, Esri World Imagery...</p>
+                  <p><strong>Activer tous les fonds :</strong> <code>Web &gt; QuickMapServices &gt; Settings &gt; More services &gt; Get contributed pack</code>.</p>
+                  <div class="eg"><strong>Usage :</strong> toujours ajouter un fond de carte comme référence. Le mettre en bas du panneau Couches pour qu'il soit en arrière-plan.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 5 -->
+    <div class="module-card" id="module5">
+      <div class="module-header" onclick="toggleModule('module5')">
+        <div class="module-num-wrap m5">5</div>
+        <div class="module-title-group">
+          <div class="module-title">Mise en page et création d'atlas</div>
+          <div class="module-subtitle">Composeur d'impression, règles TOLE, atlas automatisé et export</div>
+        </div>
+        <div class="module-dur">5 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Composeur d'impression</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Mise en page</div>
+                <div class="notion-title-text">Créer une nouvelle mise en page</div>
+                <div class="notion-preview">Espace de composition dédié, indépendant de la vue carte principale.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><code>Projet &gt; Nouvelle mise en page d'impression</code> (ou <code>Ctrl+P</code>). Donner un nom — plusieurs mises en page peuvent coexister dans un même projet.</p>
+                  <p><strong>Format de la planche :</strong> clic droit sur la planche &gt; Propriétés de la page — définir le format (A4, A3, A0...), l'orientation et la résolution.</p>
+                  <p><strong>Règle et grille :</strong> afficher la règle et activer la grille magnétique pour aligner les éléments précisément.</p>
+                  <div class="eg"><strong>Résolution :</strong> 150 DPI pour affichage écran, 300 DPI pour une impression papier de qualité professionnelle.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Règles</div>
+                <div class="notion-title-text">Règles cartographiques TOLE</div>
+                <div class="notion-preview">Titre, Orientation, Légende, Échelle, Source — les 5 éléments obligatoires.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>T — Titre :</strong> élément "Label". Descriptif et précis. Ex : "Réseau d'eau potable — commune de Saint-Lô — 2024". Grande police, en haut de la planche.</p>
+                  <p><strong>O — Orientation :</strong> élément "Image" &gt; flèche Nord dans la bibliothèque QGIS ou SVG personnalisé. Positionner en coin.</p>
+                  <p><strong>L — Légende :</strong> élément "Légende". Dans les propriétés, filtrer pour n'afficher que les couches visibles. Modifier les libellés, supprimer les éléments inutiles.</p>
+                  <p><strong>É — Échelle :</strong> élément "Barre d'échelle" graphique. La barre graphique reste correcte même si la carte est photocopiée à une taille différente.</p>
+                  <p><strong>S — Source :</strong> élément "Label" avec source des données. Ex : "Sources : IGN BD TOPO 2023 — EPSG:2154 | Réalisation : Service SIG".</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Création d'atlas — point fort de la formation</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Atlas</div>
+                <div class="notion-title-text">Principe et configuration de l'atlas</div>
+                <div class="notion-preview">Générer automatiquement N fiches cartographiques depuis une couche de couverture.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>L'Atlas génère automatiquement <strong>une page de mise en page par entité</strong> de la couche de couverture.</p>
+                  <p><strong>Activer l'Atlas :</strong> dans le composeur d'impression &gt; panneau Atlas (à droite) &gt; cocher "Générer un atlas" &gt; choisir la couche de couverture.</p>
+                  <p><strong>Paramètres de zoom :</strong> "Marge autour de l'entité" définit l'espace autour de chaque entité. "Échelle fixe" impose une même échelle pour toutes les fiches — utile pour une présentation homogène.</p>
+                  <div class="eg"><strong>Couche de couverture :</strong> une couche de polygones simples (communes, EPCI, secteurs de travaux, îlots cadastraux). Chaque polygone = une fiche.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Variables</div>
+                <div class="notion-title-text">Titres dynamiques avec variables d'atlas</div>
+                <div class="notion-preview">Le titre et les textes changent automatiquement à chaque fiche grâce aux variables.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Dans un élément Label, utiliser des <strong>expressions avec variables d'atlas</strong> entre crochets <code>[% ... %]</code> :</p>
+                  <p><code>[% @atlas_pagename %]</code> — nom de l'entité courante</p>
+                  <p><code>[% "NOM_COMMUNE" %]</code> — valeur d'un champ de la couche de couverture</p>
+                  <p><code>[% concat("Fiche N°", @atlas_featurenumber, " / ", @atlas_totalfeatures) %]</code> — numérotation automatique</p>
+                  <p><code>[% format_date(now(), 'dd/MM/yyyy') %]</code> — date de génération</p>
+                  <div class="eg"><strong>Légende dynamique :</strong> activer "Uniquement les entités dans la carte" dans les propriétés de la légende pour qu'elle ne montre que les éléments visibles sur la fiche courante.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== EXERCICES ===== -->
+  <div class="panel" id="panel-exercices">
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-title">Prise en main et exploration d'un jeu de données communal</div>
+        <div class="ex-tag tag-guidé">Guidé</div>
+      </div>
+      <div class="ex-mod">Module 1 — Durée : 1h30</div>
+      <div class="ex-desc">Ouvrir un projet QGIS fourni contenant les limites communales d'un département, un réseau routier et une couche de points (mairies). Explorer l'interface et identifier chaque panneau.</div>
+      <ol class="step-list">
+        <li>Ouvrir le projet .qgz fourni par le formateur</li>
+        <li>Identifier les types de couches (vecteur/raster) dans le panneau Couches</li>
+        <li>Utiliser le zoom et la navigation pour explorer le territoire</li>
+        <li>Ouvrir la table d'attributs de la couche communes et identifier les champs</li>
+        <li>Changer l'ordre des couches pour modifier l'affichage</li>
+      </ol>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-title">Import d'un fichier CSV de points de suivi de travaux</div>
+        <div class="ex-tag tag-pratique">Pratique</div>
+      </div>
+      <div class="ex-mod">Module 2 — Durée : 1h</div>
+      <div class="ex-desc">Importer un fichier texte contenant des coordonnées GPS de chantiers, vérifier l'encodage et le SCR, puis reprojeter en EPSG:3949.</div>
+      <ol class="step-list">
+        <li>Ouvrir le CSV dans un éditeur texte pour identifier le séparateur et l'encodage</li>
+        <li>Importer via Couche &gt; Ajouter une couche de texte délimité</li>
+        <li>Vérifier que les points s'affichent au bon endroit sur la carte</li>
+        <li>Exporter la couche en GeoPackage dans le SCR EPSG:3949</li>
+      </ol>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-title">Jointure et calcul : superficie des parcelles par propriétaire</div>
+        <div class="ex-tag tag-pratique">Pratique</div>
+      </div>
+      <div class="ex-mod">Module 3 — Durée : 2h</div>
+      <div class="ex-desc">Joindre un tableau Excel de propriétaires à une couche parcellaire, calculer la superficie en hectares et sélectionner les parcelles supérieures à 5 ha.</div>
+      <ol class="step-list">
+        <li>Installer l'extension Spreadsheet layers dans QGIS</li>
+        <li>Configurer la jointure dans Parcelles &gt; Jointures</li>
+        <li>Vérifier les champs joints dans la table d'attributs</li>
+        <li>Ouvrir le calculateur de champs, créer le champ "superficie_ha" avec $area / 10000</li>
+        <li>Filtrer par expression pour sélectionner les parcelles &gt; 5 ha</li>
+        <li>Exporter la sélection en nouvelle couche</li>
+      </ol>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-title">Carte thématique de l'occupation du sol</div>
+        <div class="ex-tag tag-pratique">Pratique</div>
+      </div>
+      <div class="ex-mod">Module 4 — Durée : 1h30</div>
+      <div class="ex-desc">Créer une carte catégorisée d'une couche des travaux 2026 avec des étiquettes de communes, sur fond OpenStreetMap.</div>
+      <ol class="step-list">
+        <li>Ajouter un fond OSM via QuickMapServices</li>
+        <li>Paramétrer la symbologie catégorisée sur le champ "eu_ep_aep"</li>
+        <li>Appliquer une rampe de couleurs et ajuster l'opacité des polygones</li>
+        <li>Activer les étiquettes communes avec halo blanc pour la lisibilité</li>
+      </ol>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header">
+        <div class="ex-title">Projet final : Atlas par commune du suivi de travaux</div>
+        <div class="ex-tag tag-projet">Projet</div>
+      </div>
+      <div class="ex-mod">Module 5 — Durée : 1h (après-midi Jour 3)</div>
+      <div class="ex-desc">Produire un atlas de N fiches cartographiques (une par commune) affichant les travaux en cours, les réseaux d'eau et les parcelles concernées, avec titre dynamique et légende.</div>
+      <ol class="step-list">
+        <li>Créer une mise en page avec tous les éléments TOLE</li>
+        <li>Configurer l'atlas sur la couche communes</li>
+        <li>Paramétrer le titre dynamique avec la variable @atlas_pagename</li>
+        <li>Prévisualiser les fiches et corriger les débordements d'étiquettes</li>
+        <li>Exporter l'atlas en PDF multi-pages</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- ===== RESSOURCES ===== -->
+  <div class="panel" id="panel-ressources">
+
+    <div class="res-grid">
+      <div class="res-card">
+        <div class="res-icon" style="background:var(--g5)">📚</div>
+        <div class="res-name">Documentation QGIS officielle</div>
+        <div class="res-desc">Manuel utilisateur complet en français sur docs.qgis.org</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:var(--b3)">🗺️</div>
+        <div class="res-name">QuickMapServices</div>
+        <div class="res-desc">Plugin pour accéder à des dizaines de fonds de carte (Google, Bing, OSM, IGN)</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:var(--a3)">⚡</div>
+        <div class="res-name">MMQGIS</div>
+        <div class="res-desc">Plugin multifonction : géocodage, conversion de formats, manipulation avancée</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:var(--g5)">🗾</div>
+        <div class="res-name">Géoportail IGN</div>
+        <div class="res-desc">Fonds de carte et données IGN officielles (BDTOPO, BDPARCELLAIRE) via WMS/WFS</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:var(--pk3)">📁</div>
+        <div class="res-name">Data.gouv.fr</div>
+        <div class="res-desc">Données ouvertes françaises : limites administratives, équipements, réseaux</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:#EEEDFE">🎯</div>
+        <div class="res-name">ColorBrewer 2.0</div>
+        <div class="res-desc">Palettes cartographiques adaptées, colorblind-safe</div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="notion-title" style="margin-top:0">Codes EPSG à retenir</div>
+      <ul class="epsg-list" style="list-style:none;margin-top:.5rem">
+        <li><strong>EPSG:2154</strong> — Lambert 93, projection officielle France métropolitaine</li>
+        <li><strong>EPSG:4326</strong> — WGS84 géographique (coordonnées GPS en degrés)</li>
+        <li><strong>EPSG:3949</strong> — UTM Zone 31N, projection utilisée pour la Manche</li>
+        <li><strong>EPSG:3857</strong> — Web Mercator (Google Maps, OSM, tuiles web)</li>
+        <li><strong>EPSG:4171</strong> — RGF93 géographique (variante française de WGS84)</li>
+      </ul>
+    </div>
+
+    <div class="info-block">
+      <div class="notion-title" style="margin-top:0">Règles cartographiques TOLE</div>
+      <ul class="tole-list" style="list-style:none;margin-top:.5rem">
+        <li><strong>T</strong>itre — descriptif, précis, daté si nécessaire</li>
+        <li><strong>O</strong>rientation — flèche Nord ou indication de l'axe</li>
+        <li><strong>L</strong>égende — tous les symboles expliqués, unités précisées</li>
+        <li><strong>É</strong>chelle — barre graphique et/ou rapport numérique</li>
+        <li><strong>S</strong>ource — auteur, organisme, date des données, projection</li>
+      </ul>
+    </div>
+
+    <a href="https://notebooklm.google.com/notebook/bec135f1-ad71-480d-95cf-ede7012a7cfe/artifact/68f3882c-8294-4115-b71d-f2c17b4d9d46" class="ask-btn" target="_blank">Quiz de révision ↗</a>
+  </div>
+
+</div><!-- .app -->
+
 <script>
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  btn.classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
 }
 
@@ -811,989 +1023,7 @@ function toggleModule(id) {
   card.classList.toggle('open');
 }
 
-document.querySelectorAll('.point-list li').forEach(li => {
-  li.style.setProperty('--dot-color', '#1D9E75');
-});
-document.querySelectorAll('.point-list li::before').forEach(b => {});
-</script>
-
-
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formation QGIS — Modules détaillés</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f5f5f3;color:#1a1a18;line-height:1.6}
-.wrap{max-width:900px;margin:0 auto;padding:2rem 1rem}
-.hero{background:#fff;border:1px solid #e0dfd6;border-radius:12px;padding:1.5rem 2rem;margin-bottom:1.5rem}
-.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#E1F5EE;color:#0F6E56;padding:3px 10px;border-radius:4px;margin-bottom:.75rem}
-.hero h1{font-size:22px;font-weight:600;margin-bottom:.3rem}
-.hero p{font-size:14px;color:#666;font-style:italic}
-.mod-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
-.mnav-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;transition:all .15s}
-.mnav-btn:hover{background:#f0f0ee}
-.mnav-btn.active{color:#fff;border-color:transparent}
-.mod-panel{display:none}
-.mod-panel.active{display:block}
-.mod-header{background:#fff;border:1px solid #e0dfd6;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
-.mod-header h2{font-size:18px;font-weight:600;margin-bottom:3px}
-.mod-header p{font-size:13px;color:#666}
-.dur{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px;margin-top:.5rem}
-.section{margin-bottom:2rem}
-.sec-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid #e8e6de}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.card{background:#fff;border:1px solid #e0dfd6;border-radius:10px;padding:1rem;cursor:pointer;transition:border-color .15s;border-left:3px solid transparent}
-.card:hover{border-color:#ccc}
-.card.open{border-left-width:3px}
-.card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.card-title{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.3}
-.card-preview{font-size:12px;color:#888;line-height:1.4}
-.card-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee}
-.card.open .card-body{display:block}
-.card-body p{font-size:12px;color:#555;line-height:1.6;margin-bottom:6px}
-.card-body p:last-child{margin-bottom:0}
-.card-body code{font-family:monospace;font-size:11px;background:#f5f5f0;padding:1px 5px;border-radius:3px;color:#333}
-.card-body .eg{background:#f8f8f5;border-radius:6px;padding:.5rem .75rem;margin-top:6px;font-size:12px;color:#555;line-height:1.5;border-left:2px solid #ccc}
-.card-body .eg strong{color:#222;font-weight:600}
-.tip{border-radius:0 8px 8px 0;padding:.65rem 1rem;margin-top:.5rem;font-size:12px;line-height:1.5}
-.tip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.btn{font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;margin-top:1rem;transition:background .15s}
-.btn:hover{background:#f5f5f0}
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<div class="hero">
-  <div class="badge">Formation SIG</div>
-  <h1>QGIS — Modules détaillés</h1>
-  <p>Cliquer sur une fiche de notion pour la développer — Cliquer à nouveau pour la fermer</p>
-</div>
-
-<div class="mod-nav">
-  <button class="mnav-btn active" style="background:#0F6E56;color:#fff" onclick="showMod(0,this)">Module 1 — Introduction</button>
-  <button class="mnav-btn" onclick="showMod(1,this)">Module 2 — Données</button>
-  <button class="mnav-btn" onclick="showMod(2,this)">Module 3 — Analyse</button>
-  <button class="mnav-btn" onclick="showMod(3,this)">Module 4 — Symbologie</button>
-  <button class="mnav-btn" onclick="showMod(4,this)">Module 5 — Mise en page</button>
-</div>
-
-<!-- ===== MODULE 1 ===== -->
-<div class="mod-panel active" id="mp0">
-  <div class="mod-header">
-    <h2>Module 1 — Introduction aux SIG et prise en main de QGIS</h2>
-    <p>Fondements théoriques, découverte de l'interface et installation du logiciel</p>
-    <div class="dur" style="background:#E1F5EE;color:#085041">&#9679; Durée estimée : 3 h</div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Concepts de base</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Définition</div>
-        <div class="card-title">Qu'est-ce qu'un SIG ?</div>
-        <div class="card-preview">Système d'Information Géographique — outil de collecte, stockage et analyse de données spatiales.</div>
-        <div class="card-body">
-          <p>Un SIG est un système informatique permettant de <strong>collecter, stocker, manipuler, analyser et restituer</strong> des données référencées géographiquement. Contrairement à un simple plan ou une carte papier, le SIG lie chaque objet spatial à une base de données attributaire interrogeable.</p>
-          <div class="eg"><strong>Cas d'usage agents :</strong> cartographier les travaux de voirie en cours et consulter l'état d'avancement par clic sur l'objet ; gérer les réseaux d'eau avec les caractéristiques de chaque canalisation ; suivre les dossiers de permis de construire par parcelle.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Vecteur</div>
-        <div class="card-title">Mode vecteur : points, lignes, polygones</div>
-        <div class="card-preview">Des objets géométriques discrets, chacun associé à une fiche d'attributs.</div>
-        <div class="card-body">
-          <p><strong>Point :</strong> coordonnées X,Y. Ex : mairie, borne incendie, captage d'eau. Chaque point possède des attributs (nom, code INSEE, date de contrôle...).</p>
-          <p><strong>Ligne (polyligne) :</strong> succession de sommets. Ex : route, cours d'eau, canalisation. Attributs : longueur, nature revêtement, débit...</p>
-          <p><strong>Polygone :</strong> surface fermée. Ex : parcelle cadastrale, zone inondable, bâtiment. Attributs : surface, propriétaire, destination...</p>
-          <div class="eg"><strong>Point clé :</strong> on peut interroger, filtrer et modifier chaque objet individuellement. C'est la force du vecteur pour la gestion métier.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Raster</div>
-        <div class="card-title">Mode raster : grille de pixels</div>
-        <div class="card-preview">Une image géoréférencée dont chaque cellule porte une valeur numérique.</div>
-        <div class="card-body">
-          <p>Un raster est une <strong>grille régulière de cellules</strong> (pixels), chacune stockant une valeur. La résolution spatiale détermine le niveau de détail.</p>
-          <p><strong>Orthophoto :</strong> photographie aérienne redressée géométriquement. Résolution typique IGN : 20 cm.</p>
-          <p><strong>MNT :</strong> chaque pixel = altitude en mètres. Utilisé pour calculer pentes, bassins versants, zones inondables.</p>
-          <div class="eg"><strong>Limite :</strong> on ne peut pas cliquer sur "un objet" dans un raster — on lit la valeur d'une cellule. Pour des analyses objet par objet, le vecteur est préférable.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Comparaison</div>
-        <div class="card-title">Quand choisir vecteur ou raster ?</div>
-        <div class="card-preview">Chaque mode a ses forces selon le besoin métier.</div>
-        <div class="card-body">
-          <p><strong>Choisir le vecteur quand :</strong> on gère des objets identifiables (parcelles, réseaux), on doit joindre des attributs, on veut filtrer par critère, on produit des cartes thématiques.</p>
-          <p><strong>Choisir le raster quand :</strong> on travaille avec des photographies ou images continues, on analyse des phénomènes continus (altitude, température), on sert de fond de référence.</p>
-          <div class="eg"><strong>En pratique :</strong> les deux coexistent dans un même projet QGIS — orthophoto raster en fond, couches vecteur parcelles et réseaux au-dessus.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Interface utilisateur</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Panneau</div>
-        <div class="card-title">Panneau Couches</div>
-        <div class="card-preview">Liste et ordre d'affichage de toutes les couches du projet.</div>
-        <div class="card-body">
-          <p>Le panneau Couches liste toutes les couches chargées. <strong>L'ordre dans le panneau détermine l'ordre d'affichage</strong> : la couche du haut s'affiche au-dessus des autres.</p>
-          <p>Cocher/décocher pour afficher/masquer ; glisser-déposer pour changer l'ordre ; clic droit pour accéder aux propriétés, zoom sur la couche, export.</p>
-          <div class="eg"><strong>Règle d'or :</strong> les polygones doivent être placés SOUS les lignes et les points, sinon ils les masquent.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Panneau</div>
-        <div class="card-title">Panneau Explorateur</div>
-        <div class="card-preview">Navigateur de fichiers et connexions aux sources de données.</div>
-        <div class="card-body">
-          <p>Naviguer dans les dossiers et prévisualiser les fichiers géographiques sans les ouvrir. Gère aussi les connexions aux bases de données et services web.</p>
-          <p><strong>Glisser-déposer :</strong> un fichier depuis l'Explorateur vers la carte ou le panneau Couches pour l'ajouter instantanément.</p>
-          <div class="eg"><strong>Astuce :</strong> ajouter les dossiers de données du service dans les "Favoris" de l'Explorateur pour un accès rapide à chaque session.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Outils</div>
-        <div class="card-title">Barres d'outils</div>
-        <div class="card-preview">Navigation, sélection, édition — les raccourcis visuels essentiels.</div>
-        <div class="card-body">
-          <p><strong>Navigation :</strong> zoom avant/arrière (molette souris), déplacement (pan), zoom sur l'emprise totale. Raccourci : <code>Z</code> zoom, <code>X</code> dézoom.</p>
-          <p><strong>Sélection :</strong> par clic (objet unique), par rectangle, par polygone libre. La sélection se matérialise en jaune sur la carte.</p>
-          <p><strong>Édition :</strong> active via le crayon (mode édition). Permet d'ajouter, déplacer, modifier ou supprimer des objets.</p>
-          <div class="eg"><strong>Raccourcis clés :</strong> <code>Ctrl+Z</code> annuler, <code>Ctrl+S</code> sauvegarder, <code>F5</code> rafraîchir, <code>F6</code> table d'attributs.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Statut</div>
-        <div class="card-title">Barre de statut et projets (.qgz)</div>
-        <div class="card-preview">Coordonnées, échelle, SCR actif et gestion des fichiers projet.</div>
-        <div class="card-body">
-          <p><strong>Barre de statut (en bas) :</strong> affiche en temps réel les coordonnées du curseur, l'échelle courante (modifiable), le SCR du projet (clic pour changer).</p>
-          <p><strong>Fichier projet (.qgz) :</strong> enregistre la liste des couches et leurs chemins relatifs, la symbologie, les mises en page. Il ne contient PAS les données sources.</p>
-          <div class="eg"><strong>Bonne pratique :</strong> toujours organiser projet et données dans un même dossier racine pour que les chemins relatifs restent valides si le dossier est déplacé.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Fenêtre</div>
-        <div class="card-title">Fenêtre principale — vue carte</div>
-        <div class="card-preview">La zone centrale affiche les couches — navigation, sélection et édition s'y effectuent.</div>
-        <div class="card-body">
-          <p>La fenêtre principale (canevas cartographique) est l'espace de visualisation central. Le clic droit sur la carte ouvre un menu contextuel selon l'outil actif.</p>
-          <p><strong>Vues multiples :</strong> QGIS permet d'ouvrir plusieurs vues de la même carte (Vue &gt; Nouvelle vue cartographique) à des échelles différentes.</p>
-          <div class="eg"><strong>Astuce :</strong> maintenir la molette enfoncée (ou la touche espace) pour passer temporairement en mode déplacement, quelle que soit l'outil actif.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Installation</div>
-    <div class="cards">
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Version</div>
-        <div class="card-title">LTR vs version courante</div>
-        <div class="card-preview">La LTR garantit stabilité et support long terme pour les environnements professionnels.</div>
-        <div class="card-body">
-          <p><strong>Version LTR (Long Term Release) :</strong> maintenue et corrigée pendant 1 an minimum. Recommandée pour les postes en production, les formations et les environnements où la stabilité prime.</p>
-          <p><strong>Version courante :</strong> nouvelles fonctionnalités toutes les 4 mois mais plus susceptible de contenir des régressions. Pour les utilisateurs avancés.</p>
-          <div class="eg"><strong>Recommandation formation :</strong> utiliser la même version LTR sur tous les postes pour garantir une expérience identique entre participants et formateur.</div>
-        </div>
-      </div>
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Installation</div>
-        <div class="card-title">Installer QGIS sous Windows</div>
-        <div class="card-preview">Via l'installeur standalone ou OSGeo4W pour un environnement complet.</div>
-        <div class="card-body">
-          <p><strong>Installeur standalone :</strong> télécharger sur qgis.org. Simple, rapide, suffisant pour la majorité des usages. Inclut GDAL/OGR et PROJ.</p>
-          <p><strong>OSGeo4W :</strong> environnement complet incluant QGIS + GRASS + SAGA + Python. Recommandé si des traitements avancés GRASS sont prévus.</p>
-          <p><strong>Vérification :</strong> lancer QGIS, ouvrir <code>Aide &gt; À propos</code> pour confirmer la version et les composants (GDAL, PROJ, GEOS).</p>
-          <div class="eg"><strong>Droits :</strong> l'installation requiert les droits administrateur. Prévoir cette étape avec le service informatique avant la formation.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ===== MODULE 2 ===== -->
-<div class="mod-panel" id="mp1">
-  <div class="mod-header">
-    <h2>Module 2 — Gestion des données et projections</h2>
-    <p>Import de couches, formats géographiques et systèmes de coordonnées</p>
-    <div class="dur" style="background:#E6F1FB;color:#0C447C">&#9679; Durée estimée : 4 h</div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Ajout de couches</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Format</div>
-        <div class="card-title">Shapefile (.shp)</div>
-        <div class="card-preview">Format historique, très répandu dans les services publics.</div>
-        <div class="card-body">
-          <p>Le Shapefile est un ensemble de <strong>plusieurs fichiers obligatoires</strong> : <code>.shp</code> (géométrie), <code>.dbf</code> (attributs), <code>.shx</code> (index), <code>.prj</code> (projection). Sans le <code>.prj</code>, QGIS ne connaît pas le SCR.</p>
-          <p><strong>Import :</strong> glisser-déposer le fichier <code>.shp</code> dans QGIS, ou <code>Couche &gt; Ajouter une couche vecteur</code>.</p>
-          <p><strong>Limites :</strong> nom de champ limité à 10 caractères, taille max 2 Go, un seul type de géométrie par fichier.</p>
-          <div class="eg"><strong>Conseil :</strong> lors du partage, toujours compresser le dossier entier en .zip — si un fichier manque, la couche ne s'ouvre pas.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Format</div>
-        <div class="card-title">GeoPackage (.gpkg)</div>
-        <div class="card-preview">Format moderne recommandé : un fichier unique qui contient tout.</div>
-        <div class="card-body">
-          <p>Base de données SQLite géospatiale. Un seul fichier <code>.gpkg</code> peut contenir <strong>plusieurs couches vecteur et raster</strong>, de la symbologie et des métadonnées.</p>
-          <p><strong>Avantages :</strong> un seul fichier à partager, pas de limite de nom de champ, pas de limite de 2 Go, compatible avec tous les SIG modernes.</p>
-          <div class="eg"><strong>Créer un GeoPackage :</strong> clic droit sur une couche &gt; Exporter &gt; Enregistrer les entités sous... &gt; choisir le format GeoPackage.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Raster</div>
-        <div class="card-title">Couches raster (GeoTIFF, JPEG2000)</div>
-        <div class="card-preview">Images géoréférencées importées via Couche &gt; Ajouter une couche raster.</div>
-        <div class="card-body">
-          <p><strong>GeoTIFF (.tif) :</strong> format standard, sans perte, intègre les métadonnées de géoréférencement. Peut être accompagné d'un fichier <code>.tfw</code> (world file).</p>
-          <p><strong>JPEG2000 (.jp2) :</strong> format compressé utilisé par l'IGN pour ses orthophotos (BD ORTHO). Excellente qualité avec taille réduite.</p>
-          <p><strong>Pyramides :</strong> pour les rasters lourds, créer des pyramides (clic droit &gt; Propriétés &gt; Pyramides) pour accélérer l'affichage.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Web</div>
-        <div class="card-title">Services web WMS et WFS</div>
-        <div class="card-preview">Données en ligne : WMS pour l'affichage, WFS pour le téléchargement.</div>
-        <div class="card-body">
-          <p><strong>WMS :</strong> renvoie des images de carte générées côté serveur. Bon pour les fonds de plan (IGN, Géoportail). Non modifiable localement.</p>
-          <p><strong>WFS :</strong> renvoie les données vecteur téléchargeables et interrogeables. Permet de récupérer les entités avec leurs attributs.</p>
-          <p><strong>Connexion :</strong> Panneau Explorateur &gt; WMS/WMTS ou WFS &gt; Nouvelle connexion &gt; coller l'URL du service.</p>
-          <div class="eg"><strong>IGN Géoportail :</strong> URL WMS — <code>https://wxs.ign.fr/essentiels/geoportail/r/wms</code> — accès aux orthophotos, cartes topo, cadastre.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Données externes (CSV / TXT)</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Import</div>
-        <div class="card-title">Importer un fichier texte délimité</div>
-        <div class="card-preview">Transformer un tableau avec colonnes X/Y en couche de points géolocalisés.</div>
-        <div class="card-body">
-          <p>Menu <code>Couche &gt; Ajouter une couche de texte délimité</code>. Choisir :</p>
-          <p><strong>Séparateur :</strong> virgule, point-virgule, tabulation ou personnalisé. Vérifier l'aperçu pour s'assurer que les colonnes sont bien découpées.</p>
-          <p><strong>Colonnes de géométrie :</strong> désigner les champs X (longitude/Easting) et Y (latitude/Northing).</p>
-          <p><strong>SCR :</strong> préciser le système de coordonnées dans lequel sont exprimées les colonnes X/Y.</p>
-          <div class="eg"><strong>Exemple :</strong> un CSV avec colonnes "X_L93" et "Y_L93" → choisir EPSG:2154 comme SCR source.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Encodage</div>
-        <div class="card-title">UTF-8 vs LATIN-1 — gérer les accents</div>
-        <div class="card-preview">Un mauvais encodage produit des caractères illisibles dans les attributs.</div>
-        <div class="card-body">
-          <p><strong>Symptôme :</strong> "Châtillon" devient "Ch?tillon" ou affiche des caractères bizarres.</p>
-          <p><strong>UTF-8 :</strong> standard universel moderne. Utilisé par défaut dans QGIS et la plupart des exports récents.</p>
-          <p><strong>LATIN-1 (ISO-8859-1) :</strong> encodage hérité fréquent dans les exports Excel anciens et fichiers de l'administration française.</p>
-          <p><strong>Solution :</strong> si les accents sont incorrects, changer l'encodage dans le menu déroulant de la boîte de dialogue d'import.</p>
-          <div class="eg"><strong>Astuce :</strong> ouvrir le fichier dans Notepad++ — l'encodage est affiché en bas à droite et peut être converti.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Vérification</div>
-        <div class="card-title">Vérifier la géométrie après import</div>
-        <div class="card-preview">S'assurer que les points s'affichent au bon endroit sur la carte.</div>
-        <div class="card-body">
-          <p>Après import, zoomer sur la couche (clic droit &gt; Zoomer sur la couche) pour vérifier que les points apparaissent au bon endroit géographique.</p>
-          <p><strong>Problème courant :</strong> les colonnes X et Y sont inversées (latitude/longitude confondues), ou le SCR source est incorrect.</p>
-          <p><strong>Diagnostic :</strong> si les points s'affichent en mer ou à l'étranger, vérifier d'abord l'inversion X/Y puis le code EPSG choisi.</p>
-          <div class="eg"><strong>Test rapide :</strong> survoler un point avec l'outil "Identifier les entités" pour voir ses coordonnées et vérifier qu'elles sont cohérentes avec la position affichée.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Systèmes de coordonnées (SCR / CRS)</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Concept</div>
-        <div class="card-title">Projections et codes EPSG</div>
-        <div class="card-preview">Chaque projection est identifiée par un code EPSG numérique universel.</div>
-        <div class="card-body">
-          <p>La Terre étant sphérique, toute carte plane implique une <strong>projection cartographique</strong> qui déforme l'espace de façon contrôlée.</p>
-          <p>Le registre EPSG attribue un <strong>code numérique unique</strong> à chaque système de référence dans le monde.</p>
-          <p>Dans QGIS, le SCR actif est visible en bas à droite de la barre de statut. Cliquer dessus pour le changer.</p>
-          <div class="eg"><strong>À retenir :</strong> EPSG:2154 = Lambert 93 France, EPSG:4326 = GPS degrés décimaux, EPSG:3857 = Web Mercator (fonds web).</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">France</div>
-        <div class="card-title">Lambert 93 — EPSG:2154</div>
-        <div class="card-preview">Projection officielle pour la France métropolitaine depuis 2009.</div>
-        <div class="card-body">
-          <p>Le Lambert 93 est la projection de référence légale pour les données géographiques en France métropolitaine. Unité : <strong>mètres</strong>.</p>
-          <p>Coordonnées typiques : X ≈ 800 000 m, Y ≈ 6 500 000 m pour un point en France centrale.</p>
-          <p><strong>Utilisation :</strong> toutes les données IGN (BD TOPO, BD ORTHO, cadastre), données de l'État et des collectivités.</p>
-          <div class="eg"><strong>Vérification :</strong> si vos coordonnées X sont entre 100 000 et 1 300 000 et Y entre 6 000 000 et 7 200 000, vous êtes en Lambert 93.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">WGS84</div>
-        <div class="card-title">WGS84 (EPSG:4326) et Web Mercator (EPSG:3857)</div>
-        <div class="card-preview">Les deux projections mondiales les plus courantes — GPS et cartographie web.</div>
-        <div class="card-body">
-          <p><strong>WGS84 (EPSG:4326) :</strong> système de référence mondial utilisé par les GPS. Coordonnées en degrés décimaux (latitude/longitude). Ex : Longitude = -1.09, Latitude = 49.11 pour Saint-Lô.</p>
-          <p><strong>Web Mercator (EPSG:3857) :</strong> projection utilisée par Google Maps, OpenStreetMap, Bing Maps pour les tuiles raster web. Coordonnées en mètres mais déformations importantes aux hautes latitudes.</p>
-          <div class="eg"><strong>Attention :</strong> ne pas calculer de surfaces ou distances en EPSG:4326 (degrés) ou EPSG:3857 — les résultats seraient erronés. Toujours reprojeter en Lambert 93 pour les calculs métriques.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Reprojection</div>
-        <div class="card-title">À la volée vs reprojection permanente</div>
-        <div class="card-preview">QGIS aligne les couches automatiquement, mais les calculs nécessitent une reprojection permanente.</div>
-        <div class="card-body">
-          <p><strong>Reprojection à la volée :</strong> QGIS transforme l'affichage des couches dans le SCR du projet. Les données sources ne sont PAS modifiées. Efficace pour visualiser, dangereux pour calculer.</p>
-          <p><strong>Reprojection permanente :</strong> clic droit &gt; Exporter &gt; Enregistrer les entités sous... &gt; choisir le SCR cible. Crée un nouveau fichier dans la projection souhaitée.</p>
-          <div class="eg"><strong>Règle :</strong> toujours travailler en Lambert 93 (EPSG:2154) pour les analyses métriques sur la France. Reprojeter les données GPS (EPSG:4326) avant tout calcul de surface ou buffer.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="tip" style="background:#E6F1FB;border-left:3px solid #185FA5">
-    <div class="tip-label" style="color:#185FA5">Exercice fil rouge module 2</div>
-    <div style="font-size:12px;color:#0C447C">Importer le Shapefile des communes fournies, un CSV de chantiers avec coordonnées GPS, vérifier les SCR, reprojeter le CSV en Lambert 93 et sauvegarder le tout dans un GeoPackage de travail.</div>
-  </div>
-</div>
-
-<!-- ===== MODULE 3 ===== -->
-<div class="mod-panel" id="mp2">
-  <div class="mod-header">
-    <h2>Module 3 — Manipulation et analyse de données</h2>
-    <p>Table d'attributs, calculs, jointures et géotraitements</p>
-    <div class="dur" style="background:#FAEEDA;color:#633806">&#9679; Durée estimée : 5 h</div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Table d'attributs</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Base</div>
-        <div class="card-title">Ouvrir la table (F6) — objet ↔ ligne</div>
-        <div class="card-preview">Chaque ligne de la table correspond à un objet géographique sur la carte.</div>
-        <div class="card-body">
-          <p>Raccourci <code>F6</code> ou clic droit sur la couche &gt; Ouvrir la table d'attributs. Chaque <strong>ligne = un objet géographique</strong>, chaque colonne = un attribut.</p>
-          <p>Cliquer sur une ligne dans la table sélectionne l'objet correspondant sur la carte (surbrillance jaune). Le bouton en bas à gauche bascule entre "toutes les entités" et "entités sélectionnées uniquement".</p>
-          <div class="eg"><strong>Astuce :</strong> <code>Ctrl + clic</code> pour sélectionner plusieurs lignes ; <code>Shift + clic</code> pour une plage continue.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Filtrage</div>
-        <div class="card-title">Sélection par formulaire et par expression</div>
-        <div class="card-preview">Sélectionner les entités répondant à des critères attributaires.</div>
-        <div class="card-body">
-          <p><strong>Sélection par formulaire :</strong> clic sur l'icône formulaire. Interface intuitive avec menus déroulants. Exemple : sélectionner toutes les parcelles d'un propriétaire donné.</p>
-          <p><strong>Sélection par expression :</strong> puissante, permet des requêtes complexes :</p>
-          <p><code>"SURFACE" > 5000</code> — parcelles de plus de 5 000 m²</p>
-          <p><code>"COMMUNE" = 'Saint-Lô' AND "ETAT" = 'En cours'</code></p>
-          <div class="eg"><strong>Après sélection :</strong> exporter uniquement les entités sélectionnées en nouvelle couche, ou leur appliquer une symbologie différente.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Tri</div>
-        <div class="card-title">Tri et recherche dans la table</div>
-        <div class="card-preview">Trier par colonne, rechercher une valeur, afficher seulement la sélection.</div>
-        <div class="card-body">
-          <p><strong>Tri :</strong> cliquer sur l'en-tête d'une colonne pour trier par ordre croissant ou décroissant. Un deuxième clic inverse l'ordre.</p>
-          <p><strong>Recherche rapide :</strong> la barre en bas de la table permet de filtrer les lignes affichées sans sélectionner. Pratique pour trouver rapidement une entité dans une grande table.</p>
-          <p><strong>Entités sélectionnées :</strong> cliquer sur "Afficher les entités sélectionnées" pour ne voir que les lignes sélectionnées — facilite le contrôle après un filtre.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#854F0B" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#854F0B">Édition</div>
-        <div class="card-title">Modifier, ajouter, supprimer des attributs</div>
-        <div class="card-preview">Activer le mode édition (crayon) pour modifier les valeurs des cellules.</div>
-        <div class="card-body">
-          <p>Cliquer sur le bouton crayon (<code>Ctrl+E</code>) pour activer le mode édition. Les cellules deviennent modifiables directement dans la table.</p>
-          <p><strong>Ajouter un champ :</strong> bouton "Nouveau champ" — définir le nom, le type (texte, entier, décimal, date) et la longueur.</p>
-          <p><strong>Supprimer un champ :</strong> bouton "Supprimer un champ" (attention, irréversible après sauvegarde).</p>
-          <div class="eg"><strong>Toujours sauvegarder</strong> (<code>Ctrl+S</code>) puis quitter le mode édition pour valider les modifications.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Calculateur de champs</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Calcul</div>
-        <div class="card-title">Créer un champ calculé</div>
-        <div class="card-preview">Générer automatiquement des valeurs depuis la géométrie ou d'autres champs.</div>
-        <div class="card-body">
-          <p>Mode édition activé &gt; icône calculatrice dans la barre de la table, ou <code>Ctrl+I</code>.</p>
-          <p><strong>Créer un nouveau champ :</strong> cocher "Créer un nouveau champ", nommer le champ, choisir le type et saisir l'expression.</p>
-          <p><strong>Mettre à jour un champ existant :</strong> décocher "Créer un nouveau champ" et sélectionner le champ cible dans la liste.</p>
-          <div class="eg"><strong>Expression surface :</strong> <code>$area / 10000</code> pour obtenir la surface en hectares (en Lambert 93, $area retourne des m²).</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Expressions</div>
-        <div class="card-title">Expressions courantes</div>
-        <div class="card-preview">Géométrie, texte, conditions — les fonctions les plus utiles en pratique.</div>
-        <div class="card-body">
-          <p><strong>Géométrie :</strong> <code>$area</code> surface en m², <code>$length</code> longueur en m, <code>$perimeter</code> périmètre, <code>$x</code> et <code>$y</code> coordonnées du centroïde.</p>
-          <p><strong>Texte :</strong> <code>upper("nom")</code> majuscules, <code>concat("prenom", ' ', "nom")</code> concaténation, <code>left("code", 2)</code> premiers caractères.</p>
-          <p><strong>Conditionnel :</strong> <code>if("surface" > 10000, 'Grande', 'Petite')</code></p>
-          <p><strong>Date :</strong> <code>now()</code> date et heure actuelles, <code>year(now())</code> année courante.</p>
-          <div class="eg"><strong>Conseil :</strong> utiliser "Prévisualisation du résultat" en bas de la fenêtre pour vérifier l'expression avant de l'appliquer à toute la couche.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Sélection</div>
-        <div class="card-title">Mettre à jour un champ sur une sélection</div>
-        <div class="card-preview">Appliquer le calcul uniquement aux entités sélectionnées — pas à toute la couche.</div>
-        <div class="card-body">
-          <p>Dans le calculateur de champs, cocher "Mettre à jour uniquement les entités sélectionnées" pour limiter l'opération à la sélection active.</p>
-          <p>Utile pour : corriger les valeurs d'un sous-ensemble, initialiser un champ de statut pour un groupe, mettre à jour la date de contrôle pour les sites visités.</p>
-          <div class="eg"><strong>Exemple :</strong> sélectionner les parcelles traitées ce mois-ci, puis mettre à jour leur champ "DATE_CONTROLE" avec <code>to_date(now())</code>.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Jointures attributaires</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Principe</div>
-        <div class="card-title">Relier un tableau à une couche géo</div>
-        <div class="card-preview">Lier un Excel/CSV à une couche via un identifiant commun (code INSEE, ID parcelle...).</div>
-        <div class="card-body">
-          <p>La jointure enrichit une couche géographique avec des données d'un tableau externe en les reliant via un <strong>champ commun aux deux sources</strong>.</p>
-          <p><strong>Condition :</strong> les deux tables doivent avoir un champ avec des valeurs identiques (même format, même écriture). Ex : code INSEE "50447" dans la couche communes ET dans le CSV statistiques.</p>
-          <p><strong>Configuration :</strong> clic droit sur la couche &gt; Propriétés &gt; onglet Jointures &gt; bouton "+" &gt; définir la couche à joindre, le champ source et le champ cible.</p>
-          <div class="eg"><strong>Exemple concret :</strong> joindre un CSV de population par commune (avec code INSEE) à la couche des limites communales pour cartographier la densité de population.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Vérification</div>
-        <div class="card-title">Valider et gérer les NULL</div>
-        <div class="card-preview">Identifier les entités non appariées et comprendre les valeurs NULL.</div>
-        <div class="card-body">
-          <p>Après la jointure, ouvrir la table d'attributs. Les nouveaux champs joints apparaissent à droite. Une valeur <code>NULL</code> signifie qu'<strong>aucune correspondance</strong> n'a été trouvée.</p>
-          <p><strong>Causes fréquentes :</strong> espaces ou caractères différents (<code>'50447'</code> vs <code>'50 447'</code>), types incompatibles (texte vs entier), codes absents d'un côté.</p>
-          <p><strong>Rendre la jointure permanente :</strong> exporter la couche pour figer les champs joints. La jointure dynamique est perdue si le projet est fermé sans export.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Géotraitements</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#534AB7" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#534AB7">Outil</div>
-        <div class="card-title">Zone tampon (buffer)</div>
-        <div class="card-preview">Créer une zone à X mètres autour d'objets (routes, points, polygones).</div>
-        <div class="card-body">
-          <p>Accès : <code>Vecteur &gt; Outils de géotraitement &gt; Zones tampons</code>, ou rechercher "Buffer" dans la boîte à outils de traitement.</p>
-          <p><strong>Paramètres clés :</strong> couche source, distance en mètres, nombre de segments (arrondi des coins), option "Dissoudre le résultat" pour fusionner les zones qui se chevauchent.</p>
-          <p>La distance peut être fixe ou variable (lire la distance dans un champ attributaire).</p>
-          <div class="eg"><strong>Cas d'usage :</strong> zone de 35 m autour d'un cours d'eau (servitude), zone de 500 m autour d'un captage (périmètre de protection), zone de 50 m autour d'une voie ferrée.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#534AB7" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#534AB7">Outil</div>
-        <div class="card-title">Découpage (clip)</div>
-        <div class="card-preview">Extraire la partie d'une couche dans une zone d'étude.</div>
-        <div class="card-body">
-          <p><strong>Découpage (clip) :</strong> extrait les géométries d'une couche A qui se trouvent à l'intérieur d'une couche B (masque). Seule la géométrie est découpée, les attributs sont conservés.</p>
-          <p><strong>Utilisation typique :</strong> extraire les routes d'une commune depuis un réseau régional, extraire les parcelles d'un secteur depuis la couche nationale.</p>
-          <div class="eg"><strong>Attention :</strong> la couche de découpe (B) doit avoir le même SCR que la couche à découper (A). Reprojeter si nécessaire avant le découpage.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#534AB7" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#534AB7">Outil</div>
-        <div class="card-title">Intersection, union et différence</div>
-        <div class="card-preview">Opérations booléennes entre deux couches pour créer des nouvelles géométries.</div>
-        <div class="card-body">
-          <p><strong>Intersection :</strong> similaire au découpage mais les attributs des DEUX couches sont fusionnés dans le résultat. Utile pour savoir quels objets de A se trouvent dans quelles zones de B.</p>
-          <p><strong>Union :</strong> combine les deux couches en préservant toutes les géométries des deux.</p>
-          <p><strong>Différence :</strong> soustrait la couche B de la couche A — retourne les parties de A non recouvertes par B.</p>
-          <div class="eg"><strong>Exemple :</strong> intersection entre zones tampons de cours d'eau et couche parcellaire → identifie les parcelles en zone de servitude, avec les attributs des deux couches.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#534AB7" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#534AB7">Boîte</div>
-        <div class="card-title">Boîte à outils de traitement</div>
-        <div class="card-preview">Accéder à tous les algorithmes QGIS/GDAL/GRASS depuis un seul panneau.</div>
-        <div class="card-body">
-          <p>Accès : <code>Traitement &gt; Boîte à outils</code> ou <code>Ctrl+Alt+T</code>. Donne accès à des centaines d'algorithmes organisés par fournisseur (QGIS natif, GDAL, GRASS, SAGA).</p>
-          <p><strong>Recherche par mot-clé :</strong> taper le nom de l'outil dans la barre de recherche. Plus rapide que de naviguer dans les menus.</p>
-          <p><strong>Historique :</strong> les derniers outils utilisés apparaissent dans l'onglet "Récents" pour les relancer rapidement.</p>
-          <div class="eg"><strong>Modèle graphique :</strong> pour des chaînes de géotraitements répétitives, utiliser le Modeleur graphique (Traitement &gt; Modeleur graphique) pour automatiser la séquence.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="tip" style="background:#FAEEDA;border-left:3px solid #BA7517">
-    <div class="tip-label" style="color:#854F0B">Application métier fil rouge</div>
-    <div style="font-size:12px;color:#633806">Joindre le tableau des propriétaires agricoles à la couche parcellaire, calculer la superficie en ha, créer une zone tampon de 35 m autour du réseau hydrographique, puis intersecter avec les parcelles pour identifier les zones de contrainte.</div>
-  </div>
-</div>
-
-<!-- ===== MODULE 4 ===== -->
-<div class="mod-panel" id="mp3">
-  <div class="mod-header">
-    <h2>Module 4 — Symbologie et analyse visuelle</h2>
-    <p>Représentation cartographique, étiquetage et plugins essentiels</p>
-    <div class="dur" style="background:#EAF3DE;color:#27500A">&#9679; Durée estimée : 4 h</div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Représentation cartographique</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Symbologie</div>
-        <div class="card-title">Symbole simple</div>
-        <div class="card-preview">Un seul style pour tous les objets de la couche — couleur, contour, épaisseur.</div>
-        <div class="card-body">
-          <p>Accès : double-clic sur la couche &gt; onglet Symbologie &gt; choisir "Symbole unique".</p>
-          <p><strong>Polygones :</strong> couleur de remplissage, couleur et épaisseur du contour, opacité. Le style "Pas de pinceau" crée des polygones transparents avec seulement le contour visible.</p>
-          <p><strong>Lignes :</strong> couleur, épaisseur (en mm ou px), style du trait (plein, tirets, pointillés), extrémités et jonctions.</p>
-          <p><strong>Points :</strong> forme (cercle, carré, étoile...), taille, couleur de remplissage et de contour. Possibilité d'utiliser un SVG ou une image personnalisée.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Symbologie</div>
-        <div class="card-title">Carte catégorisée</div>
-        <div class="card-preview">Une couleur différente par valeur de catégorie — type d'OCS, statut...</div>
-        <div class="card-body">
-          <p>Choisir "Catégorisé" dans le menu déroulant, puis sélectionner le <strong>champ de classification</strong> et cliquer sur "Classer".</p>
-          <p>QGIS attribue automatiquement une couleur différente à chaque valeur unique du champ choisi.</p>
-          <p><strong>Personnalisation :</strong> double-cliquer sur un symbole pour le modifier, modifier les libellés de la légende, supprimer des catégories de l'affichage.</p>
-          <div class="eg"><strong>Conseils couleur :</strong> utiliser des rampes ColorBrewer "qualitatives" pour les catégories — conçues pour être lisibles et différenciables, y compris pour les daltoniens.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Symbologie</div>
-        <div class="card-title">Carte graduée</div>
-        <div class="card-preview">Un dégradé de couleurs selon une valeur numérique — population, surface, indice...</div>
-        <div class="card-body">
-          <p>Choisir "Gradué", sélectionner le <strong>champ numérique</strong> et définir le nombre de classes.</p>
-          <p><strong>Méthodes de discrétisation :</strong><br>
-          — <em>Intervalles égaux</em> : classes de même amplitude.<br>
-          — <em>Quantiles</em> : même nombre d'objets par classe (pour distributions asymétriques).<br>
-          — <em>Jenks (ruptures naturelles)</em> : minimise la variance interne — souvent la meilleure pour la carto thématique.<br>
-          — <em>Écart-type</em> : classes définies autour de la moyenne.</p>
-          <div class="eg"><strong>Règle :</strong> 5 classes est le maximum recommandé pour une carte lisible. Au-delà, l'œil ne distingue plus les nuances.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Affichage</div>
-        <div class="card-title">Visibilité par échelle</div>
-        <div class="card-preview">Afficher ou masquer des couches automatiquement selon le niveau de zoom.</div>
-        <div class="card-body">
-          <p>Dans les propriétés de la couche &gt; onglet Rendu : cocher "Visibilité dépendant de l'échelle" et définir les échelles minimale et maximale.</p>
-          <p><strong>Exemples :</strong><br>
-          — Étiquettes des communes : visibles uniquement à partir du 1:50 000<br>
-          — Numéros de parcelles : uniquement à partir du 1:5 000<br>
-          — Couche de fond détaillée : masquée au-delà du 1:500 000</p>
-          <p>Améliore les performances et évite la surcharge visuelle aux petites échelles.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#3B6D11" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#3B6D11">Couleurs</div>
-        <div class="card-title">ColorBrewer et rampes cartographiques</div>
-        <div class="card-preview">Des palettes de couleurs conçues spécifiquement pour la cartographie thématique.</div>
-        <div class="card-body">
-          <p><strong>ColorBrewer 2.0</strong> (colorbrewer2.org) propose trois types de rampes :<br>
-          — <em>Séquentielle</em> : dégradé d'une teinte pour valeurs ordonnées (clair = faible, foncé = fort)<br>
-          — <em>Divergente</em> : deux couleurs contrastées autour d'un point central (négatif ↔ positif)<br>
-          — <em>Qualitative</em> : couleurs très différentes pour des catégories sans ordre</p>
-          <p>Ces rampes sont directement intégrées dans la liste des palettes QGIS.</p>
-          <div class="eg"><strong>Option "Daltonisme" :</strong> ColorBrewer indique si une rampe est adaptée aux personnes daltoniennes — important pour les cartes à diffusion publique.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Étiquetage</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Étiquettes</div>
-        <div class="card-title">Activer et mettre en forme les étiquettes</div>
-        <div class="card-preview">Afficher le nom ou la valeur d'un champ directement sur la carte.</div>
-        <div class="card-body">
-          <p>Propriétés &gt; onglet Étiquettes &gt; "Étiquettes simples" &gt; sélectionner le champ source.</p>
-          <p><strong>Mise en forme :</strong> police, taille, gras/italique, couleur du texte.</p>
-          <p><strong>Halo (masque) :</strong> contour coloré (généralement blanc) derrière le texte pour le rendre lisible sur tous les fonds. Épaisseur recommandée : 1 à 1.5 mm.</p>
-          <div class="eg"><strong>Visibilité par échelle :</strong> configurer les étiquettes pour n'apparaître qu'à partir d'une certaine échelle afin d'éviter la surcharge à vue d'ensemble.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Placement</div>
-        <div class="card-title">Placement automatique et ajustements manuels</div>
-        <div class="card-preview">QGIS place les étiquettes automatiquement — intervenir sur les chevauchements persistants.</div>
-        <div class="card-body">
-          <p>Onglet Placement : définir la priorité de placement (au-dessus, en dessous...) et les règles de collision.</p>
-          <p><strong>Déplacement manuel :</strong> activer la barre d'outils d'étiquettes &gt; outil "Déplacer une étiquette". Chaque déplacement est stocké comme "épingle" dans la couche.</p>
-          <div class="eg"><strong>Conseil :</strong> ne pas chercher à corriger tous les chevauchements en mode édition — à la mise en page, ajuster seulement les étiquettes visibles à l'échelle finale.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#185FA5" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#185FA5">Expressions</div>
-        <div class="card-title">Étiquettes basées sur des expressions</div>
-        <div class="card-preview">Concaténer plusieurs champs ou calculer la valeur à afficher dynamiquement.</div>
-        <div class="card-body">
-          <p>Au lieu d'un champ simple, utiliser une expression dans le champ "Valeur" de l'étiquette :</p>
-          <p><code>concat("NOM", '\n(', round("SURFACE_HA", 1), ' ha)')</code><br>
-          → affiche le nom ET la surface sur deux lignes</p>
-          <p><code>if("STATUT" = 'En cours', upper("NOM"), "NOM")</code><br>
-          → affiche le nom en majuscules si le chantier est actif</p>
-          <div class="eg"><strong>Le \n</strong> dans les expressions d'étiquette crée un saut de ligne — pratique pour les étiquettes multi-lignes.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Plugins indispensables</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Plugin</div>
-        <div class="card-title">QuickMapServices</div>
-        <div class="card-preview">Accéder à des dizaines de fonds de carte en quelques clics.</div>
-        <div class="card-body">
-          <p>Installation : <code>Extensions &gt; Gérer et installer des extensions &gt; rechercher "QuickMapServices" &gt; Installer</code>.</p>
-          <p>Une fois installé : <code>Web &gt; QuickMapServices &gt; choisir le fond</code>. OSM standard, HOT OSM, Google Maps (satellite, hybride, routes), Bing Aerial, Esri World Imagery...</p>
-          <p><strong>Activer tous les fonds :</strong> <code>Web &gt; QuickMapServices &gt; Settings &gt; More services &gt; Get contributed pack</code>.</p>
-          <div class="eg"><strong>Usage :</strong> toujours ajouter un fond de carte comme référence. Le mettre en bas du panneau Couches pour qu'il soit en arrière-plan.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Plugin</div>
-        <div class="card-title">MMQGIS</div>
-        <div class="card-preview">Boîte à outils complémentaire : géocodage, conversion de formats, animation...</div>
-        <div class="card-body">
-          <p><strong>Géocodage :</strong> transforme des adresses textuelles en points géolocalisés (via OpenStreetMap Nominatim ou Google Maps). Idéal pour géolocaliser rapidement une liste d'adresses.</p>
-          <p><strong>Conversion de formats :</strong> Shapefile en KML, en GeoJSON, export en DXF pour CAO.</p>
-          <p><strong>Manipulation :</strong> créer une grille, diviser des lignes à des intervalles réguliers, calculer des centroïdes...</p>
-          <div class="eg"><strong>Géocodage pratique :</strong> liste d'adresses de chantiers dans un Excel &gt; MMQGIS Geocode &gt; couche de points prête pour la carte.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Plugin</div>
-        <div class="card-title">DataPlotly</div>
-        <div class="card-preview">Graphiques statistiques liés à la carte, mis à jour dynamiquement.</div>
-        <div class="card-body">
-          <p>DataPlotly génère des graphiques interactifs (histogrammes, boîtes à moustaches, nuages de points, diagrammes en barres) directement liés aux données de la couche sélectionnée.</p>
-          <p><strong>Liaison carte-graphe :</strong> sélectionner des objets sur la carte met en surbrillance les points correspondants dans le graphique, et inversement.</p>
-          <div class="eg"><strong>Utilisation :</strong> explorer la distribution des surfaces de parcelles, comparer des indicateurs entre communes, analyser la corrélation entre deux attributs.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Gestion</div>
-        <div class="card-title">Gestionnaire d'extensions</div>
-        <div class="card-preview">Installer, mettre à jour et désactiver les extensions QGIS.</div>
-        <div class="card-body">
-          <p>Accès : <code>Extensions &gt; Gérer et installer des extensions</code>. Interface de recherche dans le dépôt officiel QGIS (plugins.qgis.org).</p>
-          <p><strong>Onglets :</strong><br>
-          — <em>Toutes</em> : parcourir et installer<br>
-          — <em>Installées</em> : activer/désactiver sans désinstaller<br>
-          — <em>Mises à jour disponibles</em> : maintenir les plugins à jour</p>
-          <p>Les plugins peuvent être désactivés sans désinstallation — ne charger que ceux nécessaires au projet pour optimiser les performances.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODULE 5 ===== -->
-<div class="mod-panel" id="mp4">
-  <div class="mod-header">
-    <h2>Module 5 — Mise en page et création d'atlas</h2>
-    <p>Composeur d'impression, règles TOLE, atlas automatisé et export</p>
-    <div class="dur" style="background:#FBEAF0;color:#72243E">&#9679; Durée estimée : 5 h</div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Composeur d'impression</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Mise en page</div>
-        <div class="card-title">Créer une nouvelle mise en page</div>
-        <div class="card-preview">Espace de composition dédié, indépendant de la vue carte principale.</div>
-        <div class="card-body">
-          <p><code>Projet &gt; Nouvelle mise en page d'impression</code> (ou <code>Ctrl+P</code>). Donner un nom — plusieurs mises en page peuvent coexister dans un même projet.</p>
-          <p><strong>Format de la planche :</strong> clic droit sur la planche &gt; Propriétés de la page — définir le format (A4, A3, A0...), l'orientation et la résolution.</p>
-          <p><strong>Règle et grille :</strong> afficher la règle et activer la grille magnétique pour aligner les éléments précisément.</p>
-          <div class="eg"><strong>Résolution :</strong> 150 DPI pour affichage écran, 300 DPI pour une impression papier de qualité professionnelle.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Carte</div>
-        <div class="card-title">Ajouter et paramétrer l'élément Carte</div>
-        <div class="card-preview">L'élément Carte affiche la vue SIG — emprise, échelle, grille de coordonnées.</div>
-        <div class="card-body">
-          <p><strong>Ajouter la carte :</strong> bouton "Ajouter une carte" dans la barre d'outils &gt; tracer le rectangle sur la planche.</p>
-          <p><strong>Emprise :</strong> dans le panneau de droite, "Définir l'emprise depuis la vue principale" pour cadrer sur la vue actuelle de QGIS, ou saisir manuellement les coordonnées.</p>
-          <p><strong>Échelle :</strong> saisir une échelle ronde (ex : 1:25 000). Utiliser une échelle normalisée (1:5000, 1:10000, 1:25000, 1:50000...).</p>
-          <p><strong>Grille de coordonnées :</strong> onglet Grilles &gt; ajouter une grille avec intervalle adapté à l'échelle et annotations pour faciliter la lecture.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Règles</div>
-        <div class="card-title">Règles cartographiques TOLE</div>
-        <div class="card-preview">Titre, Orientation, Légende, Échelle, Source — les 5 éléments obligatoires.</div>
-        <div class="card-body">
-          <p><strong>T — Titre :</strong> élément "Label". Descriptif et précis. Ex : "Réseau d'eau potable — commune de Saint-Lô — 2024". Grande police, en haut de la planche.</p>
-          <p><strong>O — Orientation :</strong> élément "Image" &gt; flèche Nord dans la bibliothèque QGIS ou SVG personnalisé. Positionner en coin.</p>
-          <p><strong>L — Légende :</strong> élément "Légende". Dans les propriétés, filtrer pour n'afficher que les couches visibles. Modifier les libellés, supprimer les éléments inutiles.</p>
-          <p><strong>É — Échelle :</strong> élément "Barre d'échelle" graphique. La barre graphique reste correcte même si la carte est photocopiée à une taille différente.</p>
-          <p><strong>S — Source :</strong> élément "Label" avec source des données. Ex : "Sources : IGN BD TOPO 2023 — EPSG:2154 | Réalisation : Service SIG".</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Design</div>
-        <div class="card-title">Positionnement, alignement et design</div>
-        <div class="card-preview">Outils d'alignement pour un résultat professionnel et cohérent.</div>
-        <div class="card-body">
-          <p><strong>Sélectionner plusieurs éléments :</strong> Shift + clic. Le menu <code>Éléments &gt; Aligner les éléments</code> permet d'aligner gauche, droite, centrer.</p>
-          <p><strong>Verrouiller les éléments :</strong> clic droit &gt; Verrouiller pour éviter les déplacements accidentels une fois positionnés.</p>
-          <p><strong>Cadre et marges :</strong> définir des marges régulières (ex : 5 mm sur tous les côtés) pour un aspect professionnel.</p>
-          <div class="eg"><strong>Modèle :</strong> une fois une mise en page satisfaisante créée, la sauvegarder comme modèle via <code>Mise en page &gt; Enregistrer comme modèle</code> pour la réutiliser.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#993556" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#993556">Cadre</div>
-        <div class="card-title">Cadre, marges et cartouche professionnel</div>
-        <div class="card-preview">Les finitions visuelles qui distinguent une carte professionnelle d'une carte brouillon.</div>
-        <div class="card-body">
-          <p><strong>Cartouche d'informations :</strong> regrouper titre, légende, sources et échelle dans une zone dédiée (souvent en bas ou à droite), séparée de la carte par un filet fin.</p>
-          <p><strong>Cadre de carte :</strong> dans les propriétés de l'élément Carte, activer le cadre (border) pour délimiter visuellement la zone cartographiée.</p>
-          <p><strong>Logo ou identité visuelle :</strong> ajouter le logo de la collectivité via l'élément "Image" pour les productions officielles.</p>
-          <div class="eg"><strong>Cohérence :</strong> utiliser une seule police sur toute la mise en page, deux tailles maximum (titre + corps), et une gamme de couleurs en accord avec la charte graphique du service.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Création d'atlas — point fort de la formation</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Atlas</div>
-        <div class="card-title">Principe et configuration de l'atlas</div>
-        <div class="card-preview">Générer automatiquement N fiches cartographiques depuis une couche de couverture.</div>
-        <div class="card-body">
-          <p>L'Atlas génère automatiquement <strong>une page de mise en page par entité</strong> de la couche de couverture.</p>
-          <p><strong>Activer l'Atlas :</strong> dans le composeur d'impression &gt; panneau Atlas (à droite) &gt; cocher "Générer un atlas" &gt; choisir la couche de couverture.</p>
-          <p><strong>Paramètres de zoom :</strong> "Marge autour de l'entité" définit l'espace autour de chaque entité. "Échelle fixe" impose une même échelle pour toutes les fiches — utile pour une présentation homogène.</p>
-          <div class="eg"><strong>Couche de couverture :</strong> une couche de polygones simples (communes, EPCI, secteurs de travaux, îlots cadastraux). Chaque polygone = une fiche.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Variables</div>
-        <div class="card-title">Titres dynamiques avec variables d'atlas</div>
-        <div class="card-preview">Le titre et les textes changent automatiquement à chaque fiche grâce aux variables.</div>
-        <div class="card-body">
-          <p>Dans un élément Label, utiliser des <strong>expressions avec variables d'atlas</strong> entre crochets <code>[% ... %]</code> :</p>
-          <p><code>[% @atlas_pagename %]</code> — nom de l'entité courante</p>
-          <p><code>[% "NOM_COMMUNE" %]</code> — valeur d'un champ de la couche de couverture</p>
-          <p><code>[% concat("Fiche N°", @atlas_featurenumber, " / ", @atlas_totalfeatures) %]</code> — numérotation automatique</p>
-          <p><code>[% format_date(now(), 'dd/MM/yyyy') %]</code> — date de génération</p>
-          <div class="eg"><strong>Légende dynamique :</strong> activer "Uniquement les entités dans la carte" dans les propriétés de la légende pour qu'elle ne montre que les éléments visibles sur la fiche courante.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Configurer</div>
-        <div class="card-title">Configurer la couche d'atlas</div>
-        <div class="card-preview">Choisir la couche qui pilote la série — une entité = une fiche.</div>
-        <div class="card-body">
-          <p>Dans le panneau Atlas : sélectionner la couche de couverture (ex : communes, parcelles, secteurs de travaux).</p>
-          <p><strong>Nom de page :</strong> choisir le champ dont la valeur sera utilisée comme nom de chaque fiche (ex : "NOM_COMMUNE"). Ce champ alimente la variable <code>@atlas_pagename</code>.</p>
-          <p><strong>Filtrage :</strong> une expression de filtrage permet de limiter l'atlas à un sous-ensemble d'entités (ex : seulement les communes d'un département, seulement les parcelles à statut "À traiter").</p>
-          <p><strong>Tri :</strong> définir un champ de tri pour ordonner les fiches (alphabétique par nom, numérique par code...).</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#0F6E56" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#0F6E56">Export</div>
-        <div class="card-title">Prévisualisation et export en lot</div>
-        <div class="card-preview">Naviguer entre les fiches et exporter toute la série en PDF ou images.</div>
-        <div class="card-body">
-          <p><strong>Prévisualisation :</strong> dans la barre d'outils Atlas, cliquer "Prévisualiser l'atlas" puis naviguer avec les flèches pour vérifier chaque fiche avant export.</p>
-          <p><strong>Export PDF multi-pages :</strong> <code>Atlas &gt; Exporter l'atlas en PDF</code> &gt; choisir le dossier et le nom. Toutes les fiches dans un seul PDF.</p>
-          <p><strong>Export images individuelles :</strong> <code>Atlas &gt; Exporter l'atlas en images</code> &gt; chaque fiche génère un PNG ou JPEG nommé automatiquement.</p>
-          <div class="eg"><strong>Nommage automatique :</strong> l'expression de nom de fichier <code>[% "NOM_COMMUNE" %]_fiche</code> crée des fichiers nommés par commune — pratique pour les retrouver.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">Export et intégration</div>
-    <div class="cards">
-
-      <div class="card" style="border-left-color:#5F5E5A" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#5F5E5A">Export</div>
-        <div class="card-title">Export PDF pour rapports administratifs</div>
-        <div class="card-preview">Haute résolution, vectoriel, idéal pour les documents officiels.</div>
-        <div class="card-body">
-          <p><strong>Export PDF :</strong> <code>Mise en page &gt; Exporter au format PDF</code>. Options : résolution DPI (300 pour impression), export du texte comme chemin (pour fidélité à l'impression) ou comme texte (pour la recherche dans le PDF).</p>
-          <p><strong>Pour les rapports :</strong> le PDF est le format de référence pour les transmissions officielles et les archives. Taille de fichier maîtrisée avec les paramètres de compression.</p>
-          <div class="eg"><strong>Astuce compression :</strong> cocher "Compresser le PDF" pour réduire la taille du fichier sans perte de qualité visible à l'impression.</div>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#5F5E5A" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#5F5E5A">Export</div>
-        <div class="card-title">Export image (PNG/JPEG) pour insertion</div>
-        <div class="card-preview">Pour insérer la carte dans Word, PowerPoint ou un e-mail.</div>
-        <div class="card-body">
-          <p><strong>Export image :</strong> <code>Mise en page &gt; Exporter comme image</code>.</p>
-          <p><strong>PNG :</strong> format sans perte, recommandé pour les cartes avec textes et couleurs franches. Taille de fichier plus importante que JPEG.</p>
-          <p><strong>JPEG :</strong> format compressé, léger pour les e-mails et documents Word. Légère perte de qualité acceptable pour les orthophotos ou fonds dégradés.</p>
-          <p><strong>Résolution :</strong> 150 DPI pour une insertion écran dans Word ou PowerPoint. 300 DPI si le document sera imprimé ensuite.</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#5F5E5A" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#5F5E5A">Export</div>
-        <div class="card-title">Export SVG et partage du projet</div>
-        <div class="card-preview">SVG pour l'édition graphique avancée, .qgz + données pour le partage complet.</div>
-        <div class="card-body">
-          <p><strong>Export SVG :</strong> format vectoriel, éditable dans Inkscape ou Illustrator pour des retouches graphiques finales (habillage personnalisé, infographies). Attention : les rasters ne sont pas vectoriels dans le SVG exporté.</p>
-          <p><strong>Partage du projet :</strong> le fichier <code>.qgz</code> seul ne suffit pas — il faut fournir toutes les données liées. Options :<br>
-          — Compresser projet + dossier de données dans une archive ZIP<br>
-          — Utiliser un GeoPackage unique contenant toutes les couches<br>
-          — <code>Projet &gt; Archiver le projet</code> (QGIS 3.20+) pour regrouper automatiquement</p>
-        </div>
-      </div>
-
-      <div class="card" style="border-left-color:#5F5E5A" onclick="toggleCard(this)">
-        <div class="card-label" style="color:#5F5E5A">Sauvegarde</div>
-        <div class="card-title">Sauvegarde du projet et bonnes pratiques</div>
-        <div class="card-preview">Organiser ses fichiers pour éviter les liens cassés et faciliter le partage.</div>
-        <div class="card-body">
-          <p><strong>Structure de dossiers recommandée :</strong><br>
-          <code>Projet_NomProjet/<br>
-          ├── NomProjet.qgz<br>
-          ├── donnees/<br>
-          │   ├── communes.gpkg<br>
-          │   └── travaux.gpkg<br>
-          └── exports/<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;├── atlas_PDF/<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;└── images/</code></p>
-          <p><strong>Chemins relatifs :</strong> toujours activer les chemins relatifs dans QGIS (<code>Projet &gt; Propriétés &gt; Général &gt; Sauvegarder les chemins relatifs</code>) pour que le projet soit portable.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="tip" style="background:#E1F5EE;border-left:3px solid #1D9E75">
-    <div class="tip-label" style="color:#0F6E56">Point fort — réponse directe aux besoins identifiés</div>
-    <div style="font-size:12px;color:#085041">Ce module répond directement à la demande forte de création d'atlas. L'après-midi du jour 3 est dédié à la production d'un atlas complet sur les données propres des participants — communes, parcelles ou secteurs de leur service.</div>
-  </div>
-</div>
-
-</div><!-- .wrap -->
-
-<script>
-const COLORS = ['#0F6E56','#185FA5','#854F0B','#3B6D11','#993556'];
-function showMod(idx, btn) {
-  document.querySelectorAll('.mod-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('mp' + idx).classList.add('active');
-  document.querySelectorAll('.mnav-btn').forEach(b => {
-    b.style.background = '#fff';
-    b.style.color = '#333';
-    b.style.borderColor = '#ccc';
-  });
-  btn.style.background = COLORS[idx];
-  btn.style.color = '#fff';
-  btn.style.borderColor = COLORS[idx];
-}
-function toggleCard(card) {
+function toggleNotion(card) {
   card.classList.toggle('open');
 }
 </script>
