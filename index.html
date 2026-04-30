@@ -339,7 +339,7 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
       <p>Les ateliers s'appuient sur des données réelles liées aux missions des agents : suivi de travaux, parcellaires agricoles, réseaux d'eau. Le matin : projet guidé pas à pas. L'après-midi : application sur les données propres des participants.</p>
     </div>
 
-    <button class="ask-btn" onclick="sendPrompt && sendPrompt('Quels prérequis faut-il avoir avant cette formation QGIS débutant ?')">Quels prérequis sont nécessaires ? ↗</button>
+   
   </div>
 
   <!-- ===== MODULES ===== -->
@@ -437,10 +437,51 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
                 <div class="notion-preview">Navigateur de fichiers et connexions aux sources de données.</div>
               </div>
               <div class="notion-body">
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Outils</div>
+                <div class="notion-title-text">Barres d'outils</div>
+                <div class="notion-preview">Navigation, sélection, édition — les raccourcis visuels essentiels.</div>
+              </div>
+              <div class="notion-body">
                 <div class="notion-body-inner">
-                  <p>Naviguer dans les dossiers et prévisualiser les fichiers géographiques sans les ouvrir. Gère aussi les connexions aux bases de données et services web.</p>
-                  <p><strong>Glisser-déposer :</strong> un fichier depuis l'Explorateur vers la carte ou le panneau Couches pour l'ajouter instantanément.</p>
-                  <div class="eg"><strong>Astuce :</strong> ajouter les dossiers de données du service dans les "Favoris" de l'Explorateur pour un accès rapide à chaque session.</div>
+                  <p><strong>Navigation :</strong> zoom avant/arrière (molette souris), déplacement (pan), zoom sur l'emprise totale. Raccourci : <code>Z</code> zoom, <code>X</code> dézoom.</p>
+                  <p><strong>Sélection :</strong> par clic (objet unique), par rectangle, par polygone libre. La sélection se matérialise en jaune sur la carte.</p>
+                  <p><strong>Édition :</strong> active via le crayon (mode édition). Permet d'ajouter, déplacer, modifier ou supprimer des objets.</p>
+                  <div class="eg"><strong>Raccourcis clés :</strong> <code>Ctrl+Z</code> annuler, <code>Ctrl+S</code> sauvegarder, <code>F5</code> rafraîchir, <code>F6</code> table d'attributs.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Statut</div>
+                <div class="notion-title-text">Barre de statut et projets (.qgz)</div>
+                <div class="notion-preview">Coordonnées, échelle, SCR actif et gestion des fichiers projet.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Barre de statut (en bas) :</strong> affiche en temps réel les coordonnées du curseur, l'échelle courante (modifiable), le SCR du projet (clic pour changer).</p>
+                  <p><strong>Fichier projet (.qgz) :</strong> enregistre la liste des couches et leurs chemins relatifs, la symbologie, les mises en page. Il ne contient PAS les données sources.</p>
+                  <div class="eg"><strong>Bonne pratique :</strong> toujours organiser projet et données dans un même dossier racine pour que les chemins relatifs restent valides si le dossier est déplacé.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Fenêtre</div>
+                <div class="notion-title-text">Fenêtre principale — vue carte</div>
+                <div class="notion-preview">La zone centrale affiche les couches — navigation, sélection et édition s'y effectuent.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>La fenêtre principale (canevas cartographique) est l'espace de visualisation central. Le clic droit sur la carte ouvre un menu contextuel selon l'outil actif.</p>
+                  <p><strong>Vues multiples :</strong> QGIS permet d'ouvrir plusieurs vues de la même carte (Vue &gt; Nouvelle vue cartographique) à des échelles différentes.</p>
+                  <div class="eg"><strong>Astuce :</strong> maintenir la molette enfoncée (ou la touche espace) pour passer temporairement en mode déplacement, quelle que soit l'outil actif.</div>
                 </div>
               </div>
             </div>
@@ -521,9 +562,6 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
               </div>
             </div>
 
-          </div>
-
-          <div class="notion-section">
             <div class="notion-title">Systèmes de coordonnées</div>
             
             <div class="notion-card" onclick="toggleNotion(this)">
@@ -614,6 +652,40 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
               </div>
             </div>
 
+
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Tri</div>
+                <div class="notion-title-text">Tri et recherche dans la table</div>
+                <div class="notion-preview">Trier par colonne, rechercher une valeur, afficher seulement la sélection.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Tri :</strong> cliquer sur l'en-tête d'une colonne pour trier par ordre croissant ou décroissant. Un deuxième clic inverse l'ordre.</p>
+                  <p><strong>Recherche rapide :</strong> la barre en bas de la table permet de filtrer les lignes affichées sans sélectionner. Pratique pour trouver rapidement une entité dans une grande table.</p>
+                  <p><strong>Entités sélectionnées :</strong> cliquer sur "Afficher les entités sélectionnées" pour ne voir que les lignes sélectionnées — facilite le contrôle après un filtre.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Édition</div>
+                <div class="notion-title-text">Modifier, ajouter, supprimer des attributs</div>
+                <div class="notion-preview">Activer le mode édition (crayon) pour modifier les valeurs des cellules.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Cliquer sur le bouton crayon (<code>Ctrl+E</code>) pour activer le mode édition. Les cellules deviennent modifiables directement dans la table.</p>
+                  <p><strong>Ajouter un champ :</strong> bouton "Nouveau champ" — définir le nom, le type (texte, entier, décimal, date) et la longueur.</p>
+                  <p><strong>Supprimer un champ :</strong> bouton "Supprimer un champ" (attention, irréversible après sauvegarde).</p>
+                  <div class="eg"><strong>Toujours sauvegarder</strong> (<code>Ctrl+S</code>) puis quitter le mode édition pour valider les modifications.</div>
+                </div>
+              </div>
+            </div>
+
+
           </div>
 
           <div class="notion-section">
@@ -637,7 +709,76 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
 
           </div>
 
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Expressions</div>
+                <div class="notion-title-text">Expressions courantes</div>
+                <div class="notion-preview">Géométrie, texte, conditions — les fonctions les plus utiles en pratique.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Géométrie :</strong> <code>$area</code> surface en m², <code>$length</code> longueur en m, <code>$perimeter</code> périmètre, <code>$x</code> et <code>$y</code> coordonnées du centroïde.</p>
+                  <p><strong>Texte :</strong> <code>upper("nom")</code> majuscules, <code>concat("prenom", ' ', "nom")</code> concaténation, <code>left("code", 2)</code> premiers caractères.</p>
+                  <p><strong>Conditionnel :</strong> <code>if("surface" > 10000, 'Grande', 'Petite')</code></p>
+                  <p><strong>Date :</strong> <code>now()</code> date et heure actuelles, <code>year(now())</code> année courante.</p>
+                  <div class="eg"><strong>Conseil :</strong> utiliser "Prévisualisation du résultat" en bas de la fenêtre pour vérifier l'expression avant de l'appliquer à toute la couche.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Sélection</div>
+                <div class="notion-title-text">Mettre à jour un champ sur une sélection</div>
+                <div class="notion-preview">Appliquer le calcul uniquement aux entités sélectionnées — pas à toute la couche.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Dans le calculateur de champs, cocher "Mettre à jour uniquement les entités sélectionnées" pour limiter l'opération à la sélection active.</p>
+                  <p>Utile pour : corriger les valeurs d'un sous-ensemble, initialiser un champ de statut pour un groupe, mettre à jour la date de contrôle pour les sites visités.</p>
+                  <div class="eg"><strong>Exemple :</strong> sélectionner les parcelles traitées ce mois-ci, puis mettre à jour leur champ "DATE_CONTROLE" avec <code>to_date(now())</code>.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
           <div class="notion-section">
+            <div class="notion-title">Jointures attributaires</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Principe</div>
+                <div class="notion-title-text">Relier un tableau à une couche géo</div>
+                <div class="notion-preview">Lier un Excel/CSV à une couche via un identifiant commun (code INSEE, ID parcelle...).</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>La jointure enrichit une couche géographique avec des données d'un tableau externe en les reliant via un <strong>champ commun aux deux sources</strong>.</p>
+                  <p><strong>Condition :</strong> les deux tables doivent avoir un champ avec des valeurs identiques (même format, même écriture). Ex : code INSEE "50447" dans la couche communes ET dans le CSV statistiques.</p>
+                  <p><strong>Configuration :</strong> clic droit sur la couche > Propriétés > onglet Jointures > bouton "+" > définir la couche à joindre, le champ source et le champ cible.</p>
+                  <div class="eg"><strong>Exemple concret :</strong> joindre un CSV de population par commune (avec code INSEE) à la couche des limites communales pour cartographier la densité de population.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Vérification</div>
+                <div class="notion-title-text">Valider et gérer les NULL</div>
+                <div class="notion-preview">Identifier les entités non appariées et comprendre les valeurs NULL.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Après la jointure, ouvrir la table d'attributs. Les nouveaux champs joints apparaissent à droite. Une valeur <code>NULL</code> signifie qu'<strong>aucune correspondance</strong> n'a été trouvée.</p>
+                  <p><strong>Causes fréquentes :</strong> espaces ou caractères différents (<code>'50447'</code> vs <code>'50 447'</code>), types incompatibles (texte vs entier), codes absents d'un côté.</p>
+                  <p><strong>Rendre la jointure permanente :</strong> exporter la couche pour figer les champs joints. La jointure dynamique est perdue si le projet est fermé sans export.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>     <div class="notion-section">
             <div class="notion-title">Géotraitements</div>
             
             <div class="notion-card" onclick="toggleNotion(this)">
@@ -656,10 +797,56 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
               </div>
             </div>
 
-          </div>
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Outil</div>
+                <div class="notion-title-text">Découpage (clip)</div>
+                <div class="notion-preview">Extraire la partie d'une couche dans une zone d'étude.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Découpage (clip) :</strong> extrait les géométries d'une couche A qui se trouvent à l'intérieur d'une couche B (masque). Seule la géométrie est découpée, les attributs sont conservés.</p>
+                  <p><strong>Utilisation typique :</strong> extraire les routes d'une commune depuis un réseau régional, extraire les parcelles d'un secteur depuis la couche nationale.</p>
+                  <div class="eg"><strong>Attention :</strong> la couche de découpe (B) doit avoir le même SCR que la couche à découper (A). Reprojeter si nécessaire avant le découpage.</div>
+                </div>
+              </div>
+            </div>
 
-        </div>
-      </div>
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Outil</div>
+                <div class="notion-title-text">Intersection, union et différence</div>
+                <div class="notion-preview">Opérations booléennes entre deux couches pour créer des nouvelles géométries.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>Intersection :</strong> similaire au découpage mais les attributs des DEUX couches sont fusionnés dans le résultat. Utile pour savoir quels objets de A se trouvent dans quelles zones de B.</p>
+                  <p><strong>Union :</strong> combine les deux couches en préservant toutes les géométries des deux.</p>
+                  <p><strong>Différence :</strong> soustrait la couche B de la couche A — retourne les parties de A non recouvertes par B.</p>
+                  <div class="eg"><strong>Exemple :</strong> intersection entre zones tampons de cours d'eau et couche parcellaire → identifie les parcelles en zone de servitude, avec les attributs des deux couches.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Boîte</div>
+                <div class="notion-title-text">Boîte à outils de traitement</div>
+                <div class="notion-preview">Accéder à tous les algorithmes QGIS/GDAL/GRASS depuis un seul panneau.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Accès : <code>Traitement &gt; Boîte à outils</code> ou <code>Ctrl+Alt+T</code>. Donne accès à des centaines d'algorithmes organisés par fournisseur (QGIS natif, GDAL, GRASS, SAGA).</p>
+                  <p><strong>Recherche par mot-clé :</strong> taper le nom de l'outil dans la barre de recherche. Plus rapide que de naviguer dans les menus.</p>
+                  <p><strong>Historique :</strong> les derniers outils utilisés apparaissent dans l'onglet "Récents" pour les relancer rapidement.</p>
+                  <div class="eg"><strong>Modèle graphique :</strong> pour des chaînes de géotraitements répétitives, utiliser le Modeleur graphique (Traitement &gt; Modeleur graphique) pour automatiser la séquence.</div>
+                </div>
+              </div>
+            </div>
+
+                </div>
+              </div>
+         
     </div>
 
     <!-- MODULE 4 -->
@@ -719,41 +906,73 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
           </div>
 
           <div class="notion-section">
-            <div class="notion-title">Étiquetage</div>
+            <div class="notion-title">Affichage et couleurs</div>
             
             <div class="notion-card" onclick="toggleNotion(this)">
               <div class="notion-header">
-                <div class="notion-label">Étiquettes</div>
-                <div class="notion-title-text">Activer et mettre en forme les étiquettes</div>
-                <div class="notion-preview">Afficher le nom ou la valeur d'un champ directement sur la carte.</div>
+                <div class="notion-label">Affichage</div>
+                <div class="notion-title-text">Visibilité par échelle</div>
+                <div class="notion-preview">Afficher ou masquer des couches automatiquement selon le niveau de zoom.</div>
               </div>
               <div class="notion-body">
                 <div class="notion-body-inner">
-                  <p>Propriétés &gt; onglet Étiquettes &gt; "Étiquettes simples" &gt; sélectionner le champ source.</p>
-                  <p><strong>Mise en forme :</strong> police, taille, gras/italique, couleur du texte.</p>
-                  <p><strong>Halo (masque) :</strong> contour coloré (généralement blanc) derrière le texte pour le rendre lisible sur tous les fonds. Épaisseur recommandée : 1 à 1.5 mm.</p>
-                  <div class="eg"><strong>Visibilité par échelle :</strong> configurer les étiquettes pour n'apparaître qu'à partir d'une certaine échelle afin d'éviter la surcharge à vue d'ensemble.</div>
+                  <p>Dans les propriétés de la couche &gt; onglet Rendu : cocher "Visibilité dépendant de l'échelle" et définir les échelles minimale et maximale.</p>
+                  <p><strong>Exemples :</strong><br>
+                  — Étiquettes des communes : visibles uniquement à partir du 1:50 000<br>
+                  — Numéros de parcelles : uniquement à partir du 1:5 000<br>
+                  — Couche de fond détaillée : masquée au-delà du 1:500 000</p>
+                  <p>Améliore les performances et évite la surcharge visuelle aux petites échelles.</p>
                 </div>
               </div>
             </div>
 
-          </div>
-
-          <div class="notion-section">
-            <div class="notion-title">Plugins indispensables</div>
-            
             <div class="notion-card" onclick="toggleNotion(this)">
               <div class="notion-header">
-                <div class="notion-label">Plugin</div>
-                <div class="notion-title-text">QuickMapServices</div>
-                <div class="notion-preview">Accéder à des dizaines de fonds de carte en quelques clics.</div>
+                <div class="notion-label">Couleurs</div>
+                <div class="notion-title-text">ColorBrewer et rampes cartographiques</div>
+                <div class="notion-preview">Des palettes de couleurs conçues spécifiquement pour la cartographie thématique.</div>
               </div>
               <div class="notion-body">
                 <div class="notion-body-inner">
-                  <p>Installation : <code>Extensions &gt; Gérer et installer des extensions &gt; rechercher "QuickMapServices" &gt; Installer</code>.</p>
-                  <p>Une fois installé : <code>Web &gt; QuickMapServices &gt; choisir le fond</code>. OSM standard, HOT OSM, Google Maps (satellite, hybride, routes), Bing Aerial, Esri World Imagery...</p>
-                  <p><strong>Activer tous les fonds :</strong> <code>Web &gt; QuickMapServices &gt; Settings &gt; More services &gt; Get contributed pack</code>.</p>
-                  <div class="eg"><strong>Usage :</strong> toujours ajouter un fond de carte comme référence. Le mettre en bas du panneau Couches pour qu'il soit en arrière-plan.</div>
+                  <p><strong>ColorBrewer 2.0</strong> (colorbrewer2.org) propose trois types de rampes :<br>
+                  — <em>Séquentielle</em> : dégradé d'une teinte pour valeurs ordonnées (clair = faible, foncé = fort)<br>
+                  — <em>Divergente</em> : deux couleurs contrastées autour d'un point central (négatif ↔ positif)<br>
+                  — <em>Qualitative</em> : couleurs très différentes pour des catégories sans ordre</p>
+                  <p>Ces rampes sont directement intégrées dans la liste des palettes QGIS.</p>
+                  <div class="eg"><strong>Option "Daltonisme" :</strong> ColorBrewer indique si une rampe est adaptée aux personnes daltoniennes — important pour les cartes à diffusion publique.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Placement</div>
+                <div class="notion-title-text">Placement automatique et ajustements manuels</div>
+                <div class="notion-preview">QGIS place les étiquettes automatiquement — intervenir sur les chevauchements persistants.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Onglet Placement : définir la priorité de placement (au-dessus, en dessous...) et les règles de collision.</p>
+                  <p><strong>Déplacement manuel :</strong> activer la barre d'outils d'étiquettes &gt; outil "Déplacer une étiquette". Chaque déplacement est stocké comme "épingle" dans la couche.</p>
+                  <div class="eg"><strong>Conseil :</strong> ne pas chercher à corriger tous les chevauchements en mode édition — à la mise en page, ajuster seulement les étiquettes visibles à l'échelle finale.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Expressions</div>
+                <div class="notion-title-text">Étiquettes basées sur des expressions</div>
+                <div class="notion-preview">Concaténer plusieurs champs ou calculer la valeur à afficher dynamiquement.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Au lieu d'un champ simple, utiliser une expression dans le champ "Valeur" de l'étiquette :</p>
+                  <p><code>concat("NOM", '\n(', round("SURFACE_HA", 1), ' ha)')</code><br>
+                  → affiche le nom ET la surface sur deux lignes</p>
+                  <p><code>if("STATUT" = 'En cours', upper("NOM"), "NOM")</code><br>
+                  → affiche le nom en majuscules si le chantier est actif</p>
+                  <div class="eg"><strong>Le \n</strong> dans les expressions d'étiquette crée un saut de ligne — pratique pour les étiquettes multi-lignes.</div>
                 </div>
               </div>
             </div>
@@ -762,8 +981,8 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
 
         </div>
       </div>
-    </div>
-
+    </div>    
+  
     <!-- MODULE 5 -->
     <div class="module-card" id="module5">
       <div class="module-header" onclick="toggleModule('module5')">
@@ -783,88 +1002,233 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
           <div class="notion-section">
             <div class="notion-title">Composeur d'impression</div>
             
-            <div class="notion-card" onclick="toggleNotion(this)">
-              <div class="notion-header">
-                <div class="notion-label">Mise en page</div>
-                <div class="notion-title-text">Créer une nouvelle mise en page</div>
-                <div class="notion-preview">Espace de composition dédié, indépendant de la vue carte principale.</div>
-              </div>
-              <div class="notion-body">
-                <div class="notion-body-inner">
-                  <p><code>Projet &gt; Nouvelle mise en page d'impression</code> (ou <code>Ctrl+P</code>). Donner un nom — plusieurs mises en page peuvent coexister dans un même projet.</p>
-                  <p><strong>Format de la planche :</strong> clic droit sur la planche &gt; Propriétés de la page — définir le format (A4, A3, A0...), l'orientation et la résolution.</p>
-                  <p><strong>Règle et grille :</strong> afficher la règle et activer la grille magnétique pour aligner les éléments précisément.</p>
-                  <div class="eg"><strong>Résolution :</strong> 150 DPI pour affichage écran, 300 DPI pour une impression papier de qualité professionnelle.</div>
+              <div class="notion-card" onclick="toggleNotion(this)">
+                <div class="notion-header">
+                  <div class="notion-label">Mise en page</div>
+                  <div class="notion-title-text">Créer une nouvelle mise en page</div>
+                  <div class="notion-preview">Espace de composition dédié, indépendant de la vue carte principale.</div>
+                </div>
+                <div class="notion-body">
+                  <div class="notion-body-inner">
+                    <p><code>Projet &gt; Nouvelle mise en page d'impression</code> (ou <code>Ctrl+P</code>). Donner un nom — plusieurs mises en page peuvent coexister dans un même projet.</p>
+                    <p><strong>Format de la planche :</strong> clic droit sur la planche &gt; Propriétés de la page — définir le format (A4, A3, A0...), l'orientation et la résolution.</p>
+                    <p><strong>Règle et grille :</strong> afficher la règle et activer la grille magnétique pour aligner les éléments précisément.</p>
+                    <div class="eg"><strong>Résolution :</strong> 150 DPI pour affichage écran, 300 DPI pour une impression papier de qualité professionnelle.</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="notion-card" onclick="toggleNotion(this)">
-              <div class="notion-header">
-                <div class="notion-label">Règles</div>
-                <div class="notion-title-text">Règles cartographiques TOLE</div>
-                <div class="notion-preview">Titre, Orientation, Légende, Échelle, Source — les 5 éléments obligatoires.</div>
-              </div>
-              <div class="notion-body">
-                <div class="notion-body-inner">
-                  <p><strong>T — Titre :</strong> élément "Label". Descriptif et précis. Ex : "Réseau d'eau potable — commune de Saint-Lô — 2024". Grande police, en haut de la planche.</p>
-                  <p><strong>O — Orientation :</strong> élément "Image" &gt; flèche Nord dans la bibliothèque QGIS ou SVG personnalisé. Positionner en coin.</p>
-                  <p><strong>L — Légende :</strong> élément "Légende". Dans les propriétés, filtrer pour n'afficher que les couches visibles. Modifier les libellés, supprimer les éléments inutiles.</p>
-                  <p><strong>É — Échelle :</strong> élément "Barre d'échelle" graphique. La barre graphique reste correcte même si la carte est photocopiée à une taille différente.</p>
-                  <p><strong>S — Source :</strong> élément "Label" avec source des données. Ex : "Sources : IGN BD TOPO 2023 — EPSG:2154 | Réalisation : Service SIG".</p>
+              <div class="notion-card" onclick="toggleNotion(this)">
+                <div class="notion-header">
+                  <div class="notion-label">Règles</div>
+                  <div class="notion-title-text">Règles cartographiques TOLE</div>
+                  <div class="notion-preview">Titre, Orientation, Légende, Échelle, Source — les 5 éléments obligatoires.</div>
+                </div>
+                <div class="notion-body">
+                  <div class="notion-body-inner">
+                    <p><strong>T — Titre :</strong> élément "Label". Descriptif et précis. Ex : "Réseau d'eau potable — commune de Saint-Lô — 2024". Grande police, en haut de la planche.</p>
+                    <p><strong>O — Orientation :</strong> élément "Image" &gt; flèche Nord dans la bibliothèque QGIS ou SVG personnalisé. Positionner en coin.</p>
+                    <p><strong>L — Légende :</strong> élément "Légende". Dans les propriétés, filtrer pour n'afficher que les couches visibles. Modifier les libellés, supprimer les éléments inutiles.</p>
+                    <p><strong>É — Échelle :</strong> élément "Barre d'échelle" graphique. La barre graphique reste correcte même si la carte est photocopiée à une taille différente.</p>
+                    <p><strong>S — Source :</strong> élément "Label" avec source des données. Ex : "Sources : IGN BD TOPO 2023 — EPSG:2154 | Réalisation : Service SIG".</p>
+                  </div>
                 </div>
               </div>
-            </div>
-
           </div>
 
           <div class="notion-section">
-            <div class="notion-title">Création d'atlas — point fort de la formation</div>
-            
-            <div class="notion-card" onclick="toggleNotion(this)">
-              <div class="notion-header">
-                <div class="notion-label">Atlas</div>
-                <div class="notion-title-text">Principe et configuration de l'atlas</div>
-                <div class="notion-preview">Générer automatiquement N fiches cartographiques depuis une couche de couverture.</div>
-              </div>
-              <div class="notion-body">
-                <div class="notion-body-inner">
-                  <p>L'Atlas génère automatiquement <strong>une page de mise en page par entité</strong> de la couche de couverture.</p>
-                  <p><strong>Activer l'Atlas :</strong> dans le composeur d'impression &gt; panneau Atlas (à droite) &gt; cocher "Générer un atlas" &gt; choisir la couche de couverture.</p>
-                  <p><strong>Paramètres de zoom :</strong> "Marge autour de l'entité" définit l'espace autour de chaque entité. "Échelle fixe" impose une même échelle pour toutes les fiches — utile pour une présentation homogène.</p>
-                  <div class="eg"><strong>Couche de couverture :</strong> une couche de polygones simples (communes, EPCI, secteurs de travaux, îlots cadastraux). Chaque polygone = une fiche.</div>
+              <div class="notion-card" onclick="toggleNotion(this)">
+                <div class="notion-header">
+                  <div class="notion-label">Design</div>
+                  <div class="notion-title-text">Positionnement, alignement et design</div>
+                  <div class="notion-preview">Outils d'alignement pour un résultat professionnel et cohérent.</div>
+                </div>
+                <div class="notion-body">
+                  <div class="notion-body-inner">
+                    <p><strong>Sélectionner plusieurs éléments :</strong> Shift + clic. Le menu <code>Éléments &gt; Aligner les éléments</code> permet d'aligner gauche, droite, centrer.</p>
+                    <p><strong>Verrouiller les éléments :</strong> clic droit &gt; Verrouiller pour éviter les déplacements accidentels une fois positionnés.</p>
+                    <p><strong>Cadre et marges :</strong> définir des marges régulières (ex : 5 mm sur tous les côtés) pour un aspect professionnel.</p>
+                    <div class="eg"><strong>Modèle :</strong> une fois une mise en page satisfaisante créée, la sauvegarder comme modèle via <code>Mise en page &gt; Enregistrer comme modèle</code> pour la réutiliser.</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="notion-card" onclick="toggleNotion(this)">
-              <div class="notion-header">
-                <div class="notion-label">Variables</div>
-                <div class="notion-title-text">Titres dynamiques avec variables d'atlas</div>
-                <div class="notion-preview">Le titre et les textes changent automatiquement à chaque fiche grâce aux variables.</div>
-              </div>
-              <div class="notion-body">
-                <div class="notion-body-inner">
-                  <p>Dans un élément Label, utiliser des <strong>expressions avec variables d'atlas</strong> entre crochets <code>[% ... %]</code> :</p>
-                  <p><code>[% @atlas_pagename %]</code> — nom de l'entité courante</p>
-                  <p><code>[% "NOM_COMMUNE" %]</code> — valeur d'un champ de la couche de couverture</p>
-                  <p><code>[% concat("Fiche N°", @atlas_featurenumber, " / ", @atlas_totalfeatures) %]</code> — numérotation automatique</p>
-                  <p><code>[% format_date(now(), 'dd/MM/yyyy') %]</code> — date de génération</p>
-                  <div class="eg"><strong>Légende dynamique :</strong> activer "Uniquement les entités dans la carte" dans les propriétés de la légende pour qu'elle ne montre que les éléments visibles sur la fiche courante.</div>
+              <div class="notion-section"  onclick="toggleCard(this)">
+                <div class="notion-card">
+                  <div class="notion-header">
+                    <div class="notion-label">Cadre</div>
+                    <div class="notion-title-text">Cadre, marges et cartouche professionnel</div>
+                      <div class="notion-preview">Les finitions visuelles qui distinguent une carte professionnelle d'une carte brouillon.</div>
+                    </div>
+                    <div class="notion-body">
+                      <div class="notion-body-inner">
+                    <p><strong>Cartouche d'informations :</strong> regrouper titre, légende, sources et échelle dans une zone dédiée (souvent en bas ou à droite), séparée de la carte par un filet fin.</p>
+                    <p><strong>Cadre de carte :</strong> dans les propriétés de l'élément Carte, activer le cadre (border) pour délimiter visuellement la zone cartographiée.</p>
+                    <p><strong>Logo ou identité visuelle :</strong> ajouter le logo de la collectivité via l'élément "Image" pour les productions officielles.</p>
+                    <div class="eg"><strong>Cohérence :</strong> utiliser une seule police sur toute la mise en page, deux tailles maximum (titre + corps), et une gamme de couleurs en accord avec la charte graphique du service.</div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
+          <div class="notion-section">
+                <div class="notion-title">Création d'atlas — point fort de la formation</div>
+                
+                <div class="notion-card" onclick="toggleNotion(this)">
+                  <div class="notion-header">
+                    <div class="notion-label">Atlas</div>
+                    <div class="notion-title-text">Principe et configuration de l'atlas</div>
+                    <div class="notion-preview">Générer automatiquement N fiches cartographiques depuis une couche de couverture.</div>
+                  </div>
+                  <div class="notion-body">
+                    <div class="notion-body-inner">
+                      <p>L'Atlas génère automatiquement <strong>une page de mise en page par entité</strong> de la couche de couverture.</p>
+                      <p><strong>Activer l'Atlas :</strong> dans le composeur d'impression &gt; panneau Atlas (à droite) &gt; cocher "Générer un atlas" &gt; choisir la couche de couverture.</p>
+                      <p><strong>Paramètres de zoom :</strong> "Marge autour de l'entité" définit l'espace autour de chaque entité. "Échelle fixe" impose une même échelle pour toutes les fiches — utile pour une présentation homogène.</p>
+                      <div class="eg"><strong>Couche de couverture :</strong> une couche de polygones simples (communes, EPCI, secteurs de travaux, îlots cadastraux). Chaque polygone = une fiche.</div>
+                    </div>
+                  </div>
           </div>
 
+                <div class="notion-card" onclick="toggleNotion(this)">
+                  <div class="notion-header">
+                    <div class="notion-label">Variables</div>
+                    <div class="notion-title-text">Titres dynamiques avec variables d'atlas</div>
+                    <div class="notion-preview">Le titre et les textes changent automatiquement à chaque fiche grâce aux variables.</div>
+                  </div>
+                  <div class="notion-body">
+                    <div class="notion-body-inner">
+                      <p>Dans un élément Label, utiliser des <strong>expressions avec variables d'atlas</strong> entre crochets <code>[% ... %]</code> :</p>
+                      <p><code>[% @atlas_pagename %]</code> — nom de l'entité courante</p>
+                      <p><code>[% "NOM_COMMUNE" %]</code> — valeur d'un champ de la couche de couverture</p>
+                      <p><code>[% concat("Fiche N°", @atlas_featurenumber, " / ", @atlas_totalfeatures) %]</code> — numérotation automatique</p>
+                      <p><code>[% format_date(now(), 'dd/MM/yyyy') %]</code> — date de génération</p>
+                      <div class="eg"><strong>Légende dynamique :</strong> activer "Uniquement les entités dans la carte" dans les propriétés de la légende pour qu'elle ne montre que les éléments visibles sur la fiche courante.</div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="notion-card"  onclick="toggleNotion(this)">
+                  <div class="notion-header">
+                    <div class="notion-label">Configurer la couche d'atlas</div>
+                    <div class="notion-title-text">Choisir la couche qui pilote la série — une entité = une fiche.</div>
+                    <div class="notion-preview">Dans le panneau Atlas : sélectionner la couche de couverture (ex : communes, parcelles, secteurs de travaux)</div>
+                    </div>
+                  <div class="notion-body">
+                    <div class="notion-body-inner">
+
+                      
+                      <p><strong>Nom de page :</strong> choisir le champ dont la valeur sera utilisée comme nom de chaque fiche (ex : "NOM_COMMUNE"). Ce champ alimente la variable <code>@atlas_pagename</code>.</p>
+                      <p><strong>Filtrage :</strong> une expression de filtrage permet de limiter l'atlas à un sous-ensemble d'entités (ex : seulement les communes d'un département, seulement les parcelles à statut "À traiter").</p>
+                      <p><strong>Tri :</strong> définir un champ de tri pour ordonner les fiches (alphabétique par nom, numérique par code...).</p>
+                      </div>
+                    </div>
+                  </div>
+
+                <div class="notion-card"  onclick="toggleNotion(this)">
+                  <div class="notion-header">
+                    <div class="notion-label">Prévisualisation et export en lot</div>
+                    <div class="notion-title-text">Naviguer entre les fiches et exporter toute la série en PDF ou images.</div>
+                    <div class="notion-preview">Dans la barre d'outils Atlas, cliquer "Prévisualiser l'atlas" puis naviguer avec les flèches pour vérifier chaque fiche avant export</div>
+                    </div>
+                    <div class="notion-body">
+                      <div class="notion-body-inner">
+                        <p><strong>Export PDF multi-pages :</strong> <code>Atlas &gt; Exporter l'atlas en PDF</code> &gt; choisir le dossier et le nom. Toutes les fiches dans un seul PDF.</p>
+                        <p><strong>Export images individuelles :</strong> <code>Atlas &gt; Exporter l'atlas en images</code> &gt; chaque fiche génère un PNG ou JPEG nommé automatiquement.</p>
+                        <div class="eg"><strong>Nommage automatique :</strong> l'expression de nom de fichier <code>[% "NOM_COMMUNE" %]_fiche</code> crée des fichiers nommés par commune — pratique pour les retrouver.</div>
+                      </div>
+                    </div>
+                </div>
+      
+          <div class="notion-section">
+                  <div class="notion-title">Export et intégration</div>
+                  <div class="cards">
+
+                    <div class="notion-card"  onclick="toggleNotion(this)">
+                      <div class="notion-header">
+                        <div class="notion-label">Export PDF pour rapports administratifs</div>
+                        <div class="notion-title-text">Haute résolution, vectoriel, idéal pour les documents officiels.</div>
+                        <div class="notion-preview"><strong>Export PDF :</strong> <code>Mise en page &gt; Exporter au format PDF</code></div>
+                      </div>  
+                        <div class="notion-body">
+                           <div class="notion-body-inner">
+                            <p> Options : résolution DPI (300 pour impression), export du texte comme chemin (pour fidélité à l'impression) ou comme texte (pour la recherche dans le PDF).</p>
+                            <p><strong>Pour les rapports :</strong> le PDF est le format de référence pour les transmissions officielles et les archives. Taille de fichier maîtrisée avec les paramètres de compression.</p>
+                            <div class="eg"><strong>Astuce compression :</strong> cocher "Compresser le PDF" pour réduire la taille du fichier sans perte de qualité visible à l'impression.</div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="notion-card"  onclick="toggleNotion(this)">
+                      <div class="notion-header">
+                        <div class="notion-label">Export image (PNG/JPEG) pour insertion</div>
+                        <div class="notion-title-text">Pour insérer la carte dans Word, PowerPoint ou un e-mail.</div>
+                        <div class="notion-preview"><strong>Export image :</strong> <code>Mise en page &gt; Exporter comme image</code></div>
+                      </div>  
+                        <div class="notion-body">
+                           <div class="notion-body-inner">
+                            <p><strong>PNG :</strong> format sans perte, recommandé pour les cartes avec textes et couleurs franches. Taille de fichier plus importante que JPEG.</p>
+                            <p><strong>JPEG :</strong> format compressé, léger pour les e-mails et documents Word. Légère perte de qualité acceptable pour les Orthophotos ou fonds dégradés.</p>
+                            <p><strong>Résolution :</strong> 150 DPI pour une insertion écran dans Word ou PowerPoint. 300 DPI si le document sera imprimé ensuite.</p>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="notion-card"  onclick="toggleNotion(this)">
+                      <div class="notion-header">
+                        <div class="notion-label">Export SVG et partage du projet</div>
+                        <div class="notion-title-text">SVG pour l'édition graphique avancée, .qgz + données pour le partage complet.</div>
+                        <div class="notion-preview"><strong>Export SVG :</strong></div>
+                      </div>  
+                        <div class="notion-body">
+                           <div class="notion-body-inner">
+                            <p> Format vectoriel, éditable dans Inkscape ou Illustrator pour des retouches graphiques finales (habillage personnalisé, infographies). Attention : les rasters ne sont pas vectoriels dans le SVG exporté.</p>
+                            <p><strong>Partage du projet :</strong> le fichier <code>.qgz</code> seul ne suffit pas — il faut fournir toutes les données liées. Options :<br>
+                            — Compresser projet + dossier de données dans une archive ZIP<br>
+                            — Utiliser un GeoPackage unique contenant toutes les couches<br>
+                            — <code>Projet &gt; Archiver le projet</code> (QGIS 3.20+) pour regrouper automatiquement</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="notion-card"  onclick="toggleNotion(this)">
+                      <div class="notion-header">
+                        <div class="notion-label">Sauvegarde du projet et bonnes pratiques</div>
+                        <div class="notion-title-text">Organiser ses fichiers pour éviter les liens cassés et faciliter le partage.</div>
+                        <div class="notion-preview">chemins relatifs</div>
+                      </div>  
+                        <div class="notion-body">
+                           <div class="notion-body-inner">
+
+                            <p><strong>Structure de dossiers recommandée :</strong><br>
+                            <code>Projet_NomProjet/<br>
+                            ├── NomProjet.qgz<br>
+                            ├── donnees/<br>
+                            │   ├── communes.gpkg<br>
+                            │   └── travaux.gpkg<br>
+                            └── exports/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;├── atlas_PDF/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;└── images/</code></p>
+                            <p><strong>Chemins relatifs :</strong> toujours activer les chemins relatifs dans QGIS (<code>Projet &gt; Propriétés &gt; Général &gt; Sauvegarder les chemins relatifs</code>) pour que le projet soit portable.</p>
+                          </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  
+          </div>
+        
         </div>
       </div>
+    
     </div>
-
+          </div>
+    </div>
+    </div>
+    </div>
   </div>
 
   <!-- ===== EXERCICES ===== -->
-  <div class="panel" id="panel-exercices">
+ <div class="panel" id="panel-exercices">
 
     <div class="ex-card">
       <div class="ex-header">
@@ -945,10 +1309,10 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
       </ol>
     </div>
 
-  </div>
+ </div>
 
   <!-- ===== RESSOURCES ===== -->
-  <div class="panel" id="panel-ressources">
+ <div class="panel" id="panel-ressources">
 
     <div class="res-grid">
       <div class="res-card">
@@ -1006,7 +1370,8 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
     </div>
 
     <a href="https://notebooklm.google.com/notebook/bec135f1-ad71-480d-95cf-ede7012a7cfe/artifact/68f3882c-8294-4115-b71d-f2c17b4d9d46" class="ask-btn" target="_blank">Quiz de révision ↗</a>
-  </div>
+ </div>
+
 
 </div><!-- .app -->
 
