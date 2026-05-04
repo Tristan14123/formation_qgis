@@ -985,6 +985,7 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
   
     <!-- MODULE 5 -->
     <div class="module-card" id="module5">
+    
       <div class="module-header" onclick="toggleModule('module5')">
         <div class="module-num-wrap m5">5</div>
         <div class="module-title-group">
@@ -1222,10 +1223,125 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
     
     </div>
           </div>
+        </div>
+      </div>
     </div>
+    
+    <!-- MODULE 6 -->
+    <div class="module-card" id="module6">
+      <div class="module-header" onclick="toggleModule('module6')">
+        <div class="module-num-wrap m1">6</div>
+        <div class="module-title-group">
+          <div class="module-title">Traitement des Données Altimétriques</div>
+          <div class="module-subtitle">MNT, courbes de niveau, ombrage et LiDAR HD</div>
+        </div>
+        <div class="module-dur">5 h</div>
+        <div class="module-chevron">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-body-inner">
+
+          <div class="notion-section">
+            <div class="notion-title">Exploiter la BD ALTI® (1m - 5m)</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Extraction</div>
+                <div class="notion-title-text">Création de Courbes de Niveau</div>
+                <div class="notion-preview">Générer des isolignes d'altitude à partir d'un raster MNT.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>La génération de courbes de niveau permet de visualiser le relief sous forme de lignes d'isovaleurs. chargez votre MNT dans QGIS. Allez dans <strong>Raster &gt; Extraction &gt; Courbes de niveau (Contour)</strong>.</p>
+                  <ul class="step-list">
+                    <li>Renseignez l'intervalle (ex: 5 m, 10 m ou 20 m).</li>
+                    <li>Indiquez un champ d'attribut pour stocker l'altitude (ex: "ELEV").</li>
+                    <li>Lancez le traitement et rendez la couche permanente.</li>
+                  </ul>
+                  <div class="eg"><strong>Conseil de pro :</strong> Pour une carte lisible, générez un jeu de courbes maîtresses (trait épais, ex: tous les 25m) et un jeu de courbes intermédiaires (trait fin, ex: tous les 5m).</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Visualisation 3D</div>
+                <div class="notion-title-text">Création d'un Ombrage (Hillshade)</div>
+                <div class="notion-preview">Simuler l'éclairage du soleil pour donner un effet de relief.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Outil : <strong>Raster &gt; Analyse &gt; Ombrage</strong>.</p>
+                  <p>Laissez l'azimut (direction du soleil) autour de <strong>315°</strong> (Nord-Ouest). Une altitude du soleil à <strong>45°</strong> est un standard. Placez la couche produite sous vos données vectorielles en jouant avec la transparence. Dans la symbologie, mettre "multiplier" comme mode de composition.</p>
+                  <p><em>Vue 3D native :</em> Allez dans Vue &gt; Nouvelles vues de carte 3D, et utilisez le MNT comme source d'élévation.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Hydrologie</div>
+                <div class="notion-title-text">Extraction de Bassin Versant</div>
+                <div class="notion-preview">Modéliser l'écoulement de l'eau à partir d'un MNT.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Utilisez la Boîte à outils de traitements (ex: algorithmes SAGA ou r.watershed de GRASS) :</p>
+                  <ul class="step-list">
+                    <p><a href="https://docs.qgis.org/3.40/fr/docs/training_manual/processing/hydro.html" target="_blank">https://docs.qgis.org/3.40/fr/docs/training_manual/processing/hydro.html</a></p>
+                    <li><strong>Fill Sinks :</strong> Corriger les imperfections du MNT (creux).</li>
+                    <li><strong>Accumulation de flux :</strong> Générer le réseau hydrographique théorique.</li>
+                    <li><strong>Bassin versant :</strong> Définir un point d'exutoire pour calculer la surface de captage.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notion-section">
+            <div class="notion-title">Exploiter le LiDAR HD (20cm)</div>
+            
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Nuages de points</div>
+                <div class="notion-title-text">Prise en main des fichiers LAS/LAZ</div>
+                <div class="notion-preview">Charger et visualiser des données LiDAR classifiées.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p>Le LiDAR aéroporté de l'IGN fournit un nuage dense de points 3D où chaque point est classifié (sol, végétation, bâti).</p>
+                  <p>Téléchargez les tuiles utiles depuis <a href="https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_MNT-LIDAR-HD" target="_blank">https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_MNT-LIDAR-HD</a>. Glissez le fichier .las ou .laz dans QGIS. Dans la symbologie, choisissez un rendu par <strong>Classification</strong> pour distinguer les éléments (ex: le sol est généralement la classe 2, le bâti la classe 6).</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="notion-card" onclick="toggleNotion(this)">
+              <div class="notion-header">
+                <div class="notion-label">Conversion</div>
+                <div class="notion-title-text">De Nuage de points à Raster (MNT/MNS)</div>
+                <div class="notion-preview">Filtrer les classes pour générer un terrain ou une surface.</div>
+              </div>
+              <div class="notion-body">
+                <div class="notion-body-inner">
+                  <p><strong>MNT (Terrain) :</strong> Exportez le nuage vers un raster en filtrant <em>uniquement les points classifiés "Sol"</em>. L'algorithme interpolera sous la végétation.</p>
+                  <p><strong>MNS (Surface) :</strong> Générez le raster en incluant tous les points du premier retour (canopée, toits).</p>
+                  <div class="eg">À partir de ce MNT très haute résolution, vous pouvez appliquer les méthodes de création d'ombrage et de courbes pour révéler des micro-reliefs invisibles autrement.</div>
+                </div>
+                <p>💡 Astuce : LIDAR comme BDALTI peuvent générer des vus 3D dans QGIS.   <strong>VUE &gt; Vue 3D</strong>. il faut juste bien renseigner le <strong>Z</strong>.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
-    </div>
-  </div>
+   
+  
+  </div> <!-- END MODULES PANEL -->
 
   <!-- ===== EXERCICES ===== -->
  <div class="panel" id="panel-exercices">
@@ -1318,7 +1434,7 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
       <div class="res-card">
         <div class="res-icon" style="background:var(--g5)">📚</div>
         <div class="res-name">Documentation QGIS officielle</div>
-        <div class="res-desc">Manuel utilisateur complet en français sur docs.qgis.org</div>
+        <div class="res-desc"><a href="https://docs.qgis.org/3.18/fr/docs/user_manual/index.html">Manuel utilisateur complet en français sur docs.qgis.org</a></div>
       </div>
       <div class="res-card">
         <div class="res-icon" style="background:var(--b3)">🗺️</div>
@@ -1332,13 +1448,18 @@ body{font-family:'Sora',sans-serif;background:var(--n0);color:var(--n5);line-hei
       </div>
       <div class="res-card">
         <div class="res-icon" style="background:var(--g5)">🗾</div>
-        <div class="res-name">Géoportail IGN</div>
-        <div class="res-desc">Fonds de carte et données IGN officielles (BDTOPO, BDPARCELLAIRE) via WMS/WFS</div>
+        <div class="res-name">Cartes.gouv IGN</div>
+        <div class="res-desc"><a href="https://cartes.gouv.fr/">Fonds de carte et données IGN officielles (BDTOPO, BDPARCELLAIRE) via WMS/WFS</a></div>
       </div>
       <div class="res-card">
         <div class="res-icon" style="background:var(--pk3)">📁</div>
-        <div class="res-name">Data.gouv.fr</div>
+        <div class="res-name"><a href="https://Data.gouv.fr/">Data.gouv.fr</a></div>
         <div class="res-desc">Données ouvertes françaises : limites administratives, équipements, réseaux</div>
+      </div>
+      <div class="res-card">
+        <div class="res-icon" style="background:#EEEDFE">🔍</div>
+        <div class="res-name">Les extensions QGIS</div>
+        <div class="res-desc">French adress, Streetview, Mask, Spreadsheet layers</div>
       </div>
       <div class="res-card">
         <div class="res-icon" style="background:#EEEDFE">🎯</div>
